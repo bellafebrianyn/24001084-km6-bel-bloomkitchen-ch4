@@ -5,7 +5,6 @@ import java.util.UUID
 
 data class Category(
     var id: String = UUID.randomUUID().toString(),
-    @DrawableRes
-    var image: Int,
+    var image: String,
     var name: String,
 )
