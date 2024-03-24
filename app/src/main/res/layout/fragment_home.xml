@@ -11,7 +11,7 @@
 
         <include
             android:id="@+id/layout_header"
-            layout="@layout/layout_header"
+            layout="@layout/layout_header_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </androidx.constraintlayout.widget.ConstraintLayout>
