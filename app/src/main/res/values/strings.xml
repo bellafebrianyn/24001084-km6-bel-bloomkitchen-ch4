@@ -5,4 +5,11 @@
     <string name="title_tab_home">For You</string>
     <string name="title_tab_cart">Your Cart</string>
     <string name="title_tab_profile">Profile</string>
+    <string name="name">Hai Bella,</string>
+    <string name="greetings">Mau makan apa hari ini?</string>
+    <string name="title_banner">Diskon 50%</string>
+    <string name="desc_banner">Penawaran istimewa! Nikmati diskon 50% untuk pembelian Anda!</string>
+    <string name="title_username">Username</string>
+    <string name="title_email">Email</string>
+    <string name="title_phone_number">No. Telepon</string>
 </resources>
