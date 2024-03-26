@@ -1,14 +1,16 @@
 package com.example.bloomkitchen.data.model
 
-import androidx.annotation.DrawableRes
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
+@Parcelize
 data class Menu(
     var id: String = UUID.randomUUID().toString(),
-    var image: String,
+    var imgUrl: String,
     var name: String,
     var price: Double,
     var desc: String,
     var location: String,
     var googleMapsLink : String
-)
+) : Parcelable

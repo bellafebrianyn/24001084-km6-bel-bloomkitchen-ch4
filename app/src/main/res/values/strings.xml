@@ -12,4 +12,9 @@
     <string name="title_username">Username</string>
     <string name="title_email">Email</string>
     <string name="title_phone_number">No. Telepon</string>
+    <string name="header_cart">Cart</string>
+    <string name="add_to_cart_price">Tambah ke Keranjang - %1$s</string>
+    <string name="add_to_cart_total_price">Tambah ke Keranjang - %1$s\n</string>
+    <string name="quantity_item">1</string>
+    <string name="title_location">Lokasi</string>
 </resources>
