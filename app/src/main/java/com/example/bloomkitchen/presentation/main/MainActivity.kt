@@ -1,13 +1,7 @@
 package com.example.bloomkitchen.presentation.main
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
-import com.example.bloomkitchen.R
 import com.example.bloomkitchen.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
