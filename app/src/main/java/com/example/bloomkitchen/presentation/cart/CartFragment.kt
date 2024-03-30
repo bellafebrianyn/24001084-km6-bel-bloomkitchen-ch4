@@ -93,6 +93,7 @@ class CartFragment : Fragment() {
                     binding.layoutState.pbLoading.isVisible = false
                     binding.layoutState.tvError.isVisible = false
                     binding.rvCart.isVisible = true
+                    binding.layoutSectionCheckout.btnCheckout.isEnabled = true
                     result.payload?.let { (carts, totalPrice) ->
                         adapter.submitData(carts)
                         binding.layoutSectionCheckout.tvTotalPrice.text = totalPrice.toIndonesianFormat()

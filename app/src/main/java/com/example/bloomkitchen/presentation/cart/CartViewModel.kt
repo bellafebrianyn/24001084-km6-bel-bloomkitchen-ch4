@@ -26,7 +26,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     fun removeCart(item: Cart) {
         viewModelScope.launch(Dispatchers.IO) {
-            cartRepository.deleteCart(item).asLiveData(Dispatchers.IO)
+            cartRepository.deleteCart(item).collect()
         }
     }
 

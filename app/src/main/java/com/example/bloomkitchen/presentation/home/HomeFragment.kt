@@ -9,14 +9,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.bloomkitchen.R
+import com.example.bloomkitchen.data.datasouce.cart.CartDataSource
+import com.example.bloomkitchen.data.datasouce.cart.CartDatabaseDataSource
 import com.example.bloomkitchen.data.datasouce.category.DummyCategoryDataSource
 import com.example.bloomkitchen.data.datasouce.menu.DummyMenuDataSource
 import com.example.bloomkitchen.data.model.Category
 import com.example.bloomkitchen.data.model.Menu
+import com.example.bloomkitchen.data.repository.CartRepositoryImpl
 import com.example.bloomkitchen.data.repository.CategoryRepository
 import com.example.bloomkitchen.data.repository.CategoryRepositoryImpl
 import com.example.bloomkitchen.data.repository.MenuRepository
 import com.example.bloomkitchen.data.repository.MenuRepositoryImpl
+import com.example.bloomkitchen.data.source.local.database.AppDatabase
 import com.example.bloomkitchen.databinding.FragmentHomeBinding
 import com.example.bloomkitchen.presentation.detailproduct.DetailActivity
 import com.example.bloomkitchen.presentation.home.adapter.CategoryListAdapter
@@ -28,15 +32,24 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
-    private val viewModel : HomeViewModel by viewModels {
-
+    private val viewModel: HomeViewModel by viewModels {
+        val database = AppDatabase.getInstance(requireContext())
         val menuDataSource = DummyMenuDataSource()
-        val menuRepository : MenuRepository = MenuRepositoryImpl(menuDataSource)
-
+        val cartDataSource: CartDataSource = CartDatabaseDataSource(database.cartDao())
+        val menuRepository: MenuRepository = MenuRepositoryImpl(menuDataSource)
         val categoryDataSource = DummyCategoryDataSource()
-        val categoryRepository: CategoryRepository = CategoryRepositoryImpl(categoryDataSource)
+        val cartRepository = CartRepositoryImpl(cartDataSource)
 
-        GenericViewModelFactory.create(HomeViewModel(categoryRepository, menuRepository))
+        val categoryRepository: CategoryRepository = CategoryRepositoryImpl(categoryDataSource)
+        GenericViewModelFactory.create(
+            HomeViewModel(
+                categoryRepository,
+                menuRepository,
+                cartRepository
+            )
+        )
+
+
     }
 
     private val categoryAdapter: CategoryListAdapter by lazy {
@@ -45,11 +58,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    /*private val menuAdapter: MenuListAdapter by lazy {
-        MenuListAdapter {
-
-        }
-    }*/
 
     private var adapter: MenuAdapter? = null
     private var isUsingGridMode: Boolean = true
@@ -77,12 +85,6 @@ class HomeFragment : Fragment() {
         categoryAdapter.submitData(data)
     }
 
-    /*private fun bindMenuList(data: List<Menu>) {
-        binding.rvMenuList.apply {
-            adapter = this@HomeFragment.adapter
-        }
-        adapter?.submitData(data)
-    }*/
     private fun setClickAction() {
         binding.ivChangeListMode.setOnClickListener {
             isUsingGridMode = !isUsingGridMode
@@ -105,7 +107,12 @@ class HomeFragment : Fragment() {
                         navigateToDetail(item)
                     }
 
+                    override fun onItemAddedToCart(item: Menu) {
+                        viewModel.addItemToCart(item)
+                    }
+
                 })
+
         binding.rvMenuList.apply {
             adapter = this@HomeFragment.adapter
             layoutManager = GridLayoutManager(requireContext(), if (isUsingGrid) 2 else 1)
