@@ -2,6 +2,9 @@ package com.example.bloomkitchen.presentation.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
+import com.example.bloomkitchen.R
 import com.example.bloomkitchen.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

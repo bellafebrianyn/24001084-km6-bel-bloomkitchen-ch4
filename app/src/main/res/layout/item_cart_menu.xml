@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/iv_menu_image"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="H,1:1.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/iv_remove_cart"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_delete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_menu_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/ll_counter_menu"
+        app:layout_constraintStart_toEndOf="@id/iv_menu_image"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Nasi Goreng" />
+
+    <TextView
+        android:id="@+id/tv_menu_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/ll_counter_menu"
+        app:layout_constraintStart_toEndOf="@+id/iv_menu_image"
+        app:layout_constraintTop_toBottomOf="@id/tv_menu_name"
+        tools:text="IDR. 20.000" />
+
+    <LinearLayout
+        android:id="@+id/ll_counter_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:weightSum="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_remove_cart">
+
+        <ImageView
+            android:id="@+id/iv_minus"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_remove" />
+
+        <TextView
+            android:id="@+id/tv_menu_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="8dp"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            tools:text="23" />
+
+        <ImageView
+            android:id="@+id/iv_plus"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"
+            android:maxWidth="240dp"
+            android:src="@drawable/ic_add" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/v_line"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/md_theme_light_inverseOnSurface"
+        app:layout_constraintTop_toBottomOf="@+id/iv_menu_image"
+        app:layout_constraintStart_toEndOf="@id/iv_menu_image"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/et_notes_item"
+        style="@style/ThemeOverlay.Material3.TextInputEditText.FilledBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/button_rounded"
+        android:backgroundTint="@color/md_theme_light_inverseOnSurface"
+        android:hint="@string/text_hint_notes"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:maxLines="3"
+        android:padding="8dp"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_menu_image"
+        app:layout_constraintTop_toBottomOf="@id/v_line"
+        tools:text="Tolong pedas banget ya" />
+</androidx.constraintlayout.widget.ConstraintLayout>

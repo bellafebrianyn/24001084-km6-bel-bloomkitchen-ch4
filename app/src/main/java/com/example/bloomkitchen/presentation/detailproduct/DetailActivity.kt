@@ -4,14 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import coil.load
 import com.example.bloomkitchen.R
+import com.example.bloomkitchen.data.datasouce.cart.CartDataSource
+import com.example.bloomkitchen.data.datasouce.cart.CartDatabaseDataSource
 import com.example.bloomkitchen.data.model.Menu
+import com.example.bloomkitchen.data.repository.CartRepository
+import com.example.bloomkitchen.data.repository.CartRepositoryImpl
+import com.example.bloomkitchen.data.source.local.database.AppDatabase
 import com.example.bloomkitchen.databinding.ActivityDetailBinding
+import com.example.bloomkitchen.utils.GenericViewModelFactory
+import com.example.bloomkitchen.utils.proceedWhen
 import com.example.bloomkitchen.utils.toIndonesianFormat
 
 class DetailActivity : AppCompatActivity() {
@@ -30,86 +36,81 @@ class DetailActivity : AppCompatActivity() {
         ActivityDetailBinding.inflate(layoutInflater)
     }
 
-    private var currentQuantity = 1
-    private var pricePerItem: Double = 0.0
-
+    private val viewModel: DetailMenuViewModel by viewModels {
+        val db = AppDatabase.getInstance(this)
+        val ds: CartDataSource = CartDatabaseDataSource(db.cartDao())
+        val rp: CartRepository = CartRepositoryImpl(ds)
+        GenericViewModelFactory.create(
+            DetailMenuViewModel(intent?.extras, rp)
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        getIntentData()
-        val menu: Menu? = intent.extras?.getParcelable(EXTRAS_DETAIL_DATA)
-        pricePerItem = menu?.price ?: 0.0
-        updateTotalPrice()
-        setUpQuantityButton()
-        backToHome()
+        bindMenu(viewModel.menu)
+        setClickListener()
+        navigateToGoogleMaps(viewModel.menu)
+        observeData()
     }
 
-    private fun backToHome() {
+    private fun observeData() {
+        viewModel.priceLiveData.observe(this) {
+                binding.layoutAddToCart.btnTotalPrice.isEnabled = it != 0.0
+            binding.layoutAddToCart.btnTotalPrice.text = getString(R.string.add_to_cart_price,
+                it.toIndonesianFormat())
+            }
+        viewModel.menuCountLiveData.observe(this) {
+            binding.layoutAddToCart.tvQuantity.text = it.toString()
+        }
+    }
+
+    private fun setClickListener() {
         binding.layoutDetailMenu.icBackToHome.setOnClickListener {
-            finish()
+            onBackPressed()
         }
-    }
-
-    private fun getIntentData() {
-        intent.extras?.getParcelable<Menu>(EXTRAS_DETAIL_DATA)?.let {
-            setMenuImage(it.imgUrl)
-            setMenuData(it)
+        binding.layoutAddToCart.icDecrease .setOnClickListener {
+            viewModel.minus()
         }
-    }
-
-    private fun setMenuImage(imgResDrawable: String?) {
-        imgResDrawable?.let { binding.layoutDetailMenu.ivDetailMenu.load(it) }
-    }
-
-    private fun setMenuData(menu: Menu) {
-        binding.layoutDetailMenu.tvMenu.text = menu.name
-        binding.layoutDetailMenu.tvPrice.text = menu.price.toIndonesianFormat()
-        binding.layoutDetailMenu.tvDescMenu.text = menu.desc
-        binding.layoutDetailLocation.tvDetailLocation.text = menu.location
-        binding.layoutAddToCart.btnTotalPrice.setText(
-            getString(
-                R.string.add_to_cart_price,
-                menu.price.toIndonesianFormat()
-            ))
-        navigateToGoogleMaps(menu)
-    }
-
-    private fun updateQuantity(delta: Int) {
-        currentQuantity += delta
-        if (currentQuantity < 1) {
-            currentQuantity = 1
-        }
-        updateQuantityText()
-    }
-
-    private fun updateQuantityText() {
-        binding.layoutAddToCart.tvQuantity.text = currentQuantity.toString()
-    }
-
-    private fun setUpQuantityButton() {
         binding.layoutAddToCart.icIncrease.setOnClickListener {
-            updateQuantity(1)
-            calculateTotalPrice()
+            viewModel.add()
         }
-        binding.layoutAddToCart.icDecrease.setOnClickListener {
-            updateQuantity(-1)
-            calculateTotalPrice()
-        }
-    }
-
-    private fun calculateTotalPrice() {
-        val totalPrice = currentQuantity * pricePerItem
-        binding.layoutAddToCart.btnTotalPrice.setText(
-            getString(
-                R.string.add_to_cart_total_price,
-                totalPrice.toIndonesianFormat()
-            ))
-    }
-
-    private fun updateTotalPrice() {
         binding.layoutAddToCart.btnTotalPrice.setOnClickListener {
-            calculateTotalPrice()
+            addProductToCart()
+        }
+    }
+
+    private fun addProductToCart() {
+        viewModel.addToCart().observe(this) {
+            it.proceedWhen (
+                doOnSuccess = {
+                    Toast.makeText(this, "Add to cart success", Toast.LENGTH_SHORT).show()
+                    finish()
+                },
+                doOnError = {
+                    Toast.makeText(this, "Add to cart failed", Toast.LENGTH_SHORT).show()
+                },
+                doOnLoading = {
+                    Toast.makeText(this, "loading..", Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
+    }
+
+    private fun bindMenu(menu: Menu?) {
+        menu?.let { item ->
+            binding.layoutDetailMenu.ivDetailMenu.load(item.imgUrl) {
+                crossfade(true)
+            }
+            binding.layoutDetailMenu.tvMenu.text = menu.name
+            binding.layoutDetailMenu.tvPrice.text = menu.price.toIndonesianFormat()
+            binding.layoutDetailMenu.tvDescMenu.text = menu.desc
+            binding.layoutDetailLocation.tvDetailLocation.text = menu.location
+            binding.layoutAddToCart.btnTotalPrice.text=
+                getString(
+                    R.string.add_to_cart_price,
+                    menu.price.toIndonesianFormat()
+                )
         }
     }
 
@@ -120,9 +121,11 @@ class DetailActivity : AppCompatActivity() {
 
     }
 
-    private fun navigateToGoogleMaps(menu: Menu) {
-        binding.layoutDetailLocation.tvDetailLocation.setOnClickListener {
-            openGoogleMapsLocation(menu.googleMapsLink)
+    private fun navigateToGoogleMaps(menu: Menu?) {
+        menu?.let { item ->
+            binding.layoutDetailLocation.tvDetailLocation.setOnClickListener {
+                openGoogleMapsLocation(item.googleMapsLink)
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.example.bloomkitchen.data.repository
 
-import com.example.bloomkitchen.data.menu.MenuDataSource
+import com.example.bloomkitchen.data.datasouce.menu.MenuDataSource
 import com.example.bloomkitchen.data.model.Menu
 
 interface MenuRepository {

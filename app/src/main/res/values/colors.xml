@@ -2,6 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="grey_text">#767676</color>
+    <color name="grey_border">#CCC3C3C3</color>
+    <color name="grey_background">#CCEDEDED</color>
+    <color name="transparent">#00FFFFFF</color>
 
     <color name="seed">#008d21</color>
     <color name="md_theme_light_primary">#006E18</color>

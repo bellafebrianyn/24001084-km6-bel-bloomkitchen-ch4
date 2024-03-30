@@ -6,7 +6,7 @@ import java.util.UUID
 
 @Parcelize
 data class Menu(
-    var id: String = UUID.randomUUID().toString(),
+    var id: String? = UUID.randomUUID().toString(),
     var imgUrl: String,
     var name: String,
     var price: Double,
