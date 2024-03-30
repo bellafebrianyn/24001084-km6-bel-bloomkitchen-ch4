@@ -56,10 +56,12 @@ class DetailActivity : AppCompatActivity() {
 
     private fun observeData() {
         viewModel.priceLiveData.observe(this) {
-                binding.layoutAddToCart.btnTotalPrice.isEnabled = it != 0.0
-            binding.layoutAddToCart.btnTotalPrice.text = getString(R.string.add_to_cart_price,
-                it.toIndonesianFormat())
-            }
+            binding.layoutAddToCart.btnTotalPrice.isEnabled = it != 0.0
+            binding.layoutAddToCart.btnTotalPrice.text = getString(
+                R.string.add_to_cart_price,
+                it.toIndonesianFormat()
+            )
+        }
         viewModel.menuCountLiveData.observe(this) {
             binding.layoutAddToCart.tvQuantity.text = it.toString()
         }
@@ -69,7 +71,7 @@ class DetailActivity : AppCompatActivity() {
         binding.layoutDetailMenu.icBackToHome.setOnClickListener {
             onBackPressed()
         }
-        binding.layoutAddToCart.icDecrease .setOnClickListener {
+        binding.layoutAddToCart.icDecrease.setOnClickListener {
             viewModel.minus()
         }
         binding.layoutAddToCart.icIncrease.setOnClickListener {
@@ -82,13 +84,13 @@ class DetailActivity : AppCompatActivity() {
 
     private fun addProductToCart() {
         viewModel.addToCart().observe(this) {
-            it.proceedWhen (
+            it.proceedWhen(
                 doOnSuccess = {
-                    Toast.makeText(this, "Add to cart success", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Add to Cart Success", Toast.LENGTH_SHORT).show()
                     finish()
                 },
                 doOnError = {
-                    Toast.makeText(this, "Add to cart failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Add to Cart Failed", Toast.LENGTH_SHORT).show()
                 },
                 doOnLoading = {
                     Toast.makeText(this, "loading..", Toast.LENGTH_SHORT).show()
@@ -106,7 +108,7 @@ class DetailActivity : AppCompatActivity() {
             binding.layoutDetailMenu.tvPrice.text = menu.price.toIndonesianFormat()
             binding.layoutDetailMenu.tvDescMenu.text = menu.desc
             binding.layoutDetailLocation.tvDetailLocation.text = menu.location
-            binding.layoutAddToCart.btnTotalPrice.text=
+            binding.layoutAddToCart.btnTotalPrice.text =
                 getString(
                     R.string.add_to_cart_price,
                     menu.price.toIndonesianFormat()
