@@ -15,10 +15,17 @@ class ProfileViewModel: ViewModel() {
     val profileData: LiveData<Profile>
         get() = _profileData
 
+    val editProfile = MutableLiveData(false)
+
     fun getProfileData() {
         val profiles = profileDataSource.getProfileData()
         if (profiles.isNotEmpty()) {
             _profileData.value = profiles[0]
         }
+    }
+
+    fun changeEditMode() {
+        val currentProfileData = editProfile.value ?: false
+        editProfile.postValue(!currentProfileData)
     }
 }
