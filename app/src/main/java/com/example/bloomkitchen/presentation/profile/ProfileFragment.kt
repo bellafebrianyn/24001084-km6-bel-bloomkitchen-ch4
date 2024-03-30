@@ -28,6 +28,8 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         profileViewModel.getProfileData()
+        setClickListener()
+        editProfileData()
 
         profileViewModel.profileData.observe(viewLifecycleOwner, Observer { profile ->
             binding.profileData.ivProfilePhoto.load(profile.image) {
@@ -38,5 +40,19 @@ class ProfileFragment : Fragment() {
             binding.profileData.etEmail.setText(profile.email)
             binding.profileData.etPhoneNumber.setText(profile.phoneNumber.toString())
         })
+    }
+
+    private fun setClickListener() {
+        binding.profileHeader.ivEdit.setOnClickListener {
+            profileViewModel.changeEditMode()
+        }
+    }
+
+    private fun editProfileData() {
+        profileViewModel.editProfile.observe(viewLifecycleOwner) {
+            binding.profileData.etUsername.isEnabled = it
+            binding.profileData.etEmail.isEnabled = it
+            binding.profileData.etPhoneNumber.isEnabled = it
+        }
     }
 }
