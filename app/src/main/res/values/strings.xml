@@ -31,7 +31,7 @@
     <string name="shopping_summary">Ringkasan Pembayaran</string>
     <string name="order_confirmation">Konfirmasi Pesanan</string>
     <string name="tv_order_success">Pesanan Berhasil</string>
-    <string name="back_to_home">Kembali ke Home</string>
+    <string name="back_to_home">Back ke Home</string>
     <string name="title_transaction">No. Transaksi</string>
     <string name="title_date">Tanggal</string>
 </resources>
