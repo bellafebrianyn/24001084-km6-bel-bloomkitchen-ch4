@@ -1,6 +1,6 @@
 package com.example.bloomkitchen.data.repository
 
-import com.example.bloomkitchen.data.category.CategoryDataSource
+import com.example.bloomkitchen.data.datasouce.category.CategoryDataSource
 import com.example.bloomkitchen.data.model.Category
 
 interface CategoryRepository {

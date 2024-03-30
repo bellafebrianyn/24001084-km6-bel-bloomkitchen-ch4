@@ -1,4 +1,4 @@
-package com.example.bloomkitchen.data.category
+package com.example.bloomkitchen.data.datasouce.category
 
 import com.example.bloomkitchen.data.model.Category
 

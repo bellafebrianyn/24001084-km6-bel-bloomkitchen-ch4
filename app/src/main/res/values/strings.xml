@@ -17,4 +17,17 @@
     <string name="add_to_cart_total_price">Tambah ke Keranjang - %1$s\n</string>
     <string name="quantity_item">1</string>
     <string name="title_location">Lokasi</string>
+    <string name="text_hint_notes">Catatan : </string>
+    <string name="text_total_price">Total Harga</string>
+    <string name="text_checkout">Pesan</string>
+    <string name="total_quantity">x%s</string>
+    <string name="text_cart_is_empty">Cart is Empty</string>
+    <string name="text_delivery_method">Metode Pengiriman</string>
+    <string name="text_pick_up">Ambil Sendiri</string>
+    <string name="text_delivery">Dikirim</string>
+    <string name="text_payment_method">Metode Pembayaran</string>
+    <string name="text_cash">Tunai</string>
+    <string name="text_e_wallet">Dompet Digital</string>
+    <string name="shopping_summary">Ringkasan Pembayaran</string>
+    <string name="order_confirmation">Konfirmasi Pesanan</string>
 </resources>
