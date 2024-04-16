@@ -34,4 +34,19 @@
     <string name="back_to_home">Back to Home</string>
     <string name="title_transaction">No. Transaksi</string>
     <string name="title_date">Tanggal</string>
+    <string name="title_password">Password</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_phone_number">No. Telepon</string>
+    <string name="btn_register">Register</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="already_have_account">Sudah punya akun? Login disini</string>
+    <string name="text_error_name_cannot_empty">Username tidak boleh kosong</string>
+    <string name="text_error_password_empty">Password tidak boleh kosong</string>
+    <string name="text_error_password_less_than_8_char">Password tidak boleh kurang dari 8 karakter</string>
+    <string name="text_password_does_not_match">Password tidak sesuai</string>
+    <string name="text_error_email_empty">Email tidak boleh kosong</string>
+    <string name="text_error_email_invalid">Masukkan email sesuai format</string>
+    <string name="text_highlight_login_here">Login disini</string>
 </resources>
