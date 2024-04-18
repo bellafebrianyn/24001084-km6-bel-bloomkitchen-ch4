@@ -12,20 +12,30 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bloomkitchen.R
+import com.example.bloomkitchen.data.datasouce.authentication.AuthDataSource
+import com.example.bloomkitchen.data.datasouce.authentication.FirebaseAuthDataSource
 import com.example.bloomkitchen.data.datasouce.cart.CartDataSource
 import com.example.bloomkitchen.data.datasouce.cart.CartDatabaseDataSource
 import com.example.bloomkitchen.data.repository.CartRepository
 import com.example.bloomkitchen.data.repository.CartRepositoryImpl
+import com.example.bloomkitchen.data.repository.UserRepository
+import com.example.bloomkitchen.data.repository.UserRepositoryImpl
+import com.example.bloomkitchen.data.source.firebase.FirebaseService
+import com.example.bloomkitchen.data.source.firebase.FirebaseServiceImpl
 import com.example.bloomkitchen.data.source.local.database.AppDatabase
 import com.example.bloomkitchen.databinding.ActivityCheckoutBinding
 import com.example.bloomkitchen.presentation.checkout.adapter.PriceListAdapter
 import com.example.bloomkitchen.presentation.common.adapter.CartListAdapter
+import com.example.bloomkitchen.presentation.login.LoginActivity
 import com.example.bloomkitchen.presentation.main.MainActivity
+import com.example.bloomkitchen.presentation.profile.ProfileViewModel
 import com.example.bloomkitchen.utils.GenericViewModelFactory
 import com.example.bloomkitchen.utils.proceedWhen
 import com.example.bloomkitchen.utils.toIndonesianFormat
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -37,8 +47,11 @@ class CheckoutActivity : AppCompatActivity() {
     private val viewModel: CheckoutViewModel by viewModels {
         val db = AppDatabase.getInstance(this)
         val ds: CartDataSource = CartDatabaseDataSource(db.cartDao())
-        val rp: CartRepository = CartRepositoryImpl(ds)
-        GenericViewModelFactory.create(CheckoutViewModel(rp))
+        val cartRepository: CartRepository = CartRepositoryImpl(ds)
+        val service: FirebaseService = FirebaseServiceImpl()
+        val authDataSource: AuthDataSource = FirebaseAuthDataSource(service)
+        val userRepository: UserRepository = UserRepositoryImpl(authDataSource)
+        GenericViewModelFactory.create(CheckoutViewModel(cartRepository, userRepository))
     }
 
     private val adapter: CartListAdapter by lazy {
@@ -58,6 +71,21 @@ class CheckoutActivity : AppCompatActivity() {
         observeData()
         setClickListeners()
         setActionOnSuccessOrder()
+        isLogin()
+    }
+
+    private fun isLogin() {
+        lifecycleScope.launch {
+            if (!viewModel.isUserLoggedIn()) {
+                navigateToLogin()
+            }
+        }
+    }
+
+    private fun navigateToLogin() {
+        startActivity(Intent(this, LoginActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        })
     }
 
     private fun setActionOnSuccessOrder() {
