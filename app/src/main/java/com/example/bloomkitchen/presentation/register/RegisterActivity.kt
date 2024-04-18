@@ -15,6 +15,7 @@ import com.example.bloomkitchen.data.repository.UserRepositoryImpl
 import com.example.bloomkitchen.data.source.firebase.FirebaseService
 import com.example.bloomkitchen.data.source.firebase.FirebaseServiceImpl
 import com.example.bloomkitchen.databinding.ActivityRegisterBinding
+import com.example.bloomkitchen.presentation.login.LoginActivity
 import com.example.bloomkitchen.presentation.main.MainActivity
 import com.example.bloomkitchen.utils.GenericViewModelFactory
 import com.example.bloomkitchen.utils.highLightWord
@@ -51,34 +52,32 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun navigateToLogin() {
-        /*  startActivity(Intent(this, LoginActivity::class.java).apply {
+          startActivity(Intent(this, LoginActivity::class.java).apply {
               flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-          })*/
+          })
     }
 
 
     private fun doRegister() {
         if (isFormValid()) {
-            val username = binding.layoutFormRegister.etUsername.text.toString().trim()
-            val password = binding.layoutFormRegister.etPassword.text.toString().trim()
+            val fullName = binding.layoutFormRegister.etFullName.text.toString().trim()
             val email = binding.layoutFormRegister.etEmail.text.toString().trim()
-            val phoneNumber = binding.layoutFormRegister.etPhoneNumber.text.toString().trim()
-            proceedRegister(username, password, email, phoneNumber)
+            val password = binding.layoutFormRegister.etPassword.text.toString().trim()
+            proceedRegister(fullName, email, password)
         }
     }
 
     private fun proceedRegister(
-        username: String,
-        password: String,
+        fullName: String,
         email: String,
-        phoneNumber: String
+        password: String
     ) {
-        viewModel.doRegister(username, password, email, phoneNumber).observe(this) {
+        viewModel.doRegister(fullName, email, password).observe(this) {
             it.proceedWhen(
                 doOnSuccess = {
                     binding.layoutFormRegister.pbLoading.isVisible = false
                     binding.layoutFormRegister.btnRegister.isVisible = true
-                    navigateToMain()
+                    navigateToLogin()
                 },
                 doOnError = {
                     binding.layoutFormRegister.pbLoading.isVisible = false
@@ -104,13 +103,12 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun isFormValid(): Boolean {
-        val username = binding.layoutFormRegister.etUsername.text.toString().trim()
+        val fullName = binding.layoutFormRegister.etFullName.text.toString().trim()
+        val email = binding.layoutFormRegister.etEmail.text.toString().trim()
         val password = binding.layoutFormRegister.etPassword.text.toString().trim()
         val confirmPassword = binding.layoutFormRegister.etConfirmPassword.text.toString().trim()
-        val email = binding.layoutFormRegister.etEmail.text.toString().trim()
-        val phoneNumber = binding.layoutFormRegister.etPhoneNumber.text.toString().trim()
 
-        return checkNameValidation(username) && checkPasswordValidation(
+        return checkNameValidation(fullName) && checkPasswordValidation(
             password,
             binding.layoutFormRegister.tilPassword
         ) &&
@@ -120,6 +118,7 @@ class RegisterActivity : AppCompatActivity() {
         ) &&
                 checkPwdAndConfirmPwd(password, confirmPassword)
     }
+
 
     private fun checkPwdAndConfirmPwd(password: String, confirmPassword: String): Boolean {
         return if (password != confirmPassword) {
@@ -174,21 +173,21 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun checkNameValidation(username: String): Boolean {
         return if (username.isEmpty()) {
-            binding.layoutFormRegister.tilUsername.isErrorEnabled = true
-            binding.layoutFormRegister.tilUsername.error =
+            binding.layoutFormRegister.tilFullName.isErrorEnabled = true
+            binding.layoutFormRegister.tilFullName.error =
                 getString(R.string.text_error_name_cannot_empty)
             false
         } else {
-            binding.layoutFormRegister.tilUsername.isErrorEnabled = false
+            binding.layoutFormRegister.tilFullName.isErrorEnabled = false
             true
         }
     }
 
     private fun setupForm() {
         with(binding.layoutFormRegister) {
-            tilUsername.isVisible = true
-            tilPassword.isVisible = true
+            tilFullName.isVisible = true
             tilEmail.isVisible = true
+            tilPassword.isVisible = true
             tilConfirmPassword.isVisible = true
         }
     }

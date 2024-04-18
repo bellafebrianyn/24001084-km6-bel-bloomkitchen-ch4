@@ -6,8 +6,8 @@ import com.example.bloomkitchen.data.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 
 class RegisterViewModel(private val repository: UserRepository) : ViewModel() {
-    fun doRegister(username: String, password: String, email: String, phoneNumber: String) =
+    fun doRegister(fullName: String, email: String, password: String) =
         repository
-            .doRegister(username, password, email, phoneNumber)
+            .doRegister(fullName, email, password)
             .asLiveData(Dispatchers.IO)
 }

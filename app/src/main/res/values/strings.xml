@@ -49,4 +49,11 @@
     <string name="text_error_email_empty">Email tidak boleh kosong</string>
     <string name="text_error_email_invalid">Masukkan email sesuai format</string>
     <string name="text_highlight_login_here">Login disini</string>
+    <string name="not_registered">Belum punya akun? Daftar disini</string>
+    <string name="login">Login</string>
+    <string name="highlight_register">Daftar disini</string>
+    <string name="text_error_phone_number_cannot_empty">No. telepon tidak boleh kosong</string>
+    <string name="login_failed">Login Gagal %1$s</string>
+    <string name="text_logout">Logout</string>
+    <string name="full_name">Full Name</string>
 </resources>

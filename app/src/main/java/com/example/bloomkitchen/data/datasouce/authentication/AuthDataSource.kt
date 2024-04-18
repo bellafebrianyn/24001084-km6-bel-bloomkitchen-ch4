@@ -7,21 +7,30 @@ import java.lang.Exception
 
 interface AuthDataSource {
     @Throws(exceptionClasses = [Exception::class])
-    suspend fun doRegister(username: String, password: String, email: String, phoneNumber: String): Boolean
+    suspend fun doLogin(email: String, password: String): Boolean
+
+    @Throws(exceptionClasses = [Exception::class])
+    suspend fun doRegister(fullName: String, email: String, password: String): Boolean
     suspend fun updateProfile(username: String? = null): Boolean
     suspend fun updatePassword(newPassword: String): Boolean
     suspend fun updateEmail(newEmail: String): Boolean
+    fun requestChangePasswordByEmail(): Boolean
+    fun doLogout(): Boolean
+    fun isLoggedIn(): Boolean
     fun getCurrentUser(): User?
 }
 
 class FirebaseAuthDataSource(private val service: FirebaseService): AuthDataSource {
+    override suspend fun doLogin(email: String, password: String): Boolean {
+        return service.doLogin(email, password)
+    }
+
     override suspend fun doRegister(
-        username: String,
-        password: String,
+        fullName: String,
         email: String,
-        phoneNumber: String
+        password: String
     ): Boolean {
-        return service.doRegister(username, password, email, phoneNumber)
+        return service.doRegister(fullName, email, password)
     }
 
     override suspend fun updateProfile(username: String?): Boolean {
@@ -34,6 +43,18 @@ class FirebaseAuthDataSource(private val service: FirebaseService): AuthDataSour
 
     override suspend fun updateEmail(newEmail: String): Boolean {
         return service.updateEmail(newEmail)
+    }
+
+    override fun requestChangePasswordByEmail(): Boolean {
+        return service.requestChangePasswordByEmail()
+    }
+
+    override fun doLogout(): Boolean {
+        return service.doLogout()
+    }
+
+    override fun isLoggedIn(): Boolean {
+        return service.isLoggedIn()
     }
 
     override fun getCurrentUser(): User? {
