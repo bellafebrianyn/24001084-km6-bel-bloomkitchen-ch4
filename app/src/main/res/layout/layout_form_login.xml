@@ -61,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="4dp"
+            app:endIconMode="password_toggle"
             app:boxBackgroundColor="@color/md_theme_light_inverseOnSurface"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_title_password">
@@ -71,17 +72,28 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_password"
                 android:textSize="14sp"
+                android:inputType="textPassword"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:id="@+id/tv_forget_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
+        android:textColor="#1A4BFF"
+        android:text="@string/forget_password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/til_password"/>
 
         <FrameLayout
             android:id="@+id/fl_btn_loading_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/til_password"
+            app:layout_constraintTop_toBottomOf="@id/tv_forget_password"
             app:layout_constraintStart_toStartOf="parent">
 
             <Button

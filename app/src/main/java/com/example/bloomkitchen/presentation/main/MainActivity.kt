@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.bloomkitchen.R
@@ -16,7 +15,6 @@ import com.example.bloomkitchen.data.source.firebase.FirebaseService
 import com.example.bloomkitchen.data.source.firebase.FirebaseServiceImpl
 import com.example.bloomkitchen.databinding.ActivityMainBinding
 import com.example.bloomkitchen.presentation.login.LoginActivity
-import com.example.bloomkitchen.presentation.profile.ProfileViewModel
 import com.example.bloomkitchen.utils.GenericViewModelFactory
 
 class MainActivity : AppCompatActivity() {
@@ -48,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_tab_profile -> {
                     if(!viewModel.isUserLoggedIn()){
                         navigateToLogin()
-                        controller.navigate(R.id.menu_tab_home)
+                        controller.popBackStack(R.id.menu_tab_home, false)
                     }
                 }
             }
@@ -57,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateToLogin() {
         startActivity(Intent(this, LoginActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
         })
     }
 

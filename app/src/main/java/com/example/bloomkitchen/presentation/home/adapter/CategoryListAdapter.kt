@@ -55,7 +55,7 @@ class CategoryListAdapter (private val itemClick: (Category) -> Unit) :
 
         fun bindView(item: Category) {
             with(item) {
-                binding.ivCategoryImage.load(item.imgUrl) {
+                binding.ivCategoryImage.load(item.imageUrl) {
                     crossfade(true)
                 }
                 binding.tvCategoryName.text = item.name

@@ -38,4 +38,6 @@ class ProfileViewModel(private val userRepository: UserRepository): ViewModel() 
 
     fun isUserLoggedOut() = userRepository.doLogout()
 
+    fun getCurrentUser() = userRepository.getCurrentUser()
+
 }

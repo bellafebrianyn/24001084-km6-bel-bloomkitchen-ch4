@@ -101,13 +101,13 @@ class DetailActivity : AppCompatActivity() {
 
     private fun bindMenu(menu: Menu?) {
         menu?.let { item ->
-            binding.layoutDetailMenu.ivDetailMenu.load(item.imgUrl) {
+            binding.layoutDetailMenu.ivDetailMenu.load(item.imageUrl) {
                 crossfade(true)
             }
-            binding.layoutDetailMenu.tvMenu.text = menu.name
-            binding.layoutDetailMenu.tvPrice.text = menu.price.toIndonesianFormat()
-            binding.layoutDetailMenu.tvDescMenu.text = menu.desc
-            binding.layoutDetailLocation.tvDetailLocation.text = menu.location
+            binding.layoutDetailMenu.tvMenu.text = item.name
+            binding.layoutDetailMenu.tvPrice.text = item.price.toIndonesianFormat()
+            binding.layoutDetailMenu.tvDescMenu.text = item.detail
+            binding.layoutDetailLocation.tvDetailLocation.text = menu.restoAddress
             binding.layoutAddToCart.btnTotalPrice.text =
                 getString(
                     R.string.add_to_cart_price,
@@ -126,7 +126,7 @@ class DetailActivity : AppCompatActivity() {
     private fun navigateToGoogleMaps(menu: Menu?) {
         menu?.let { item ->
             binding.layoutDetailLocation.tvDetailLocation.setOnClickListener {
-                openGoogleMapsLocation(item.googleMapsLink)
+                openGoogleMapsLocation(item.locationUrl)
             }
         }
     }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "697144391660",
+    "project_id": "bloomkitchen-826e5",
+    "storage_bucket": "bloomkitchen-826e5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:697144391660:android:173782b18bbcfb6b1d32c9",
+        "android_client_info": {
+          "package_name": "com.example.bloomkitchen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAr9ONga31U4qaVMj3fumYD9CX4kIvMkFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
