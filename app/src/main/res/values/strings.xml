@@ -56,4 +56,11 @@
     <string name="login_failed">Login Gagal %1$s</string>
     <string name="text_logout">Logout</string>
     <string name="full_name">Full Name</string>
+    <string name="error_checkout">Error Checkout</string>
+    <string name="create_order_success">Create Order Success</string>
+    <string name="close">Close</string>
+    <string name="text_on_menu_data_empty">Menu is Empty</string>
+    <string name="greetingsName">Hai, %1$s</string>
+    <string name="category_is_empty">Category is Empty</string>
+    <string name="forget_password">Lupa Password?</string>
 </resources>

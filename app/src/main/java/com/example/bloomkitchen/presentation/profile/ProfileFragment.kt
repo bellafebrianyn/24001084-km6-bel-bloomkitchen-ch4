@@ -56,8 +56,9 @@ class ProfileFragment : Fragment() {
                 crossfade(true)
                 error(R.mipmap.ic_launcher)
             }
-            binding.profileData.etUsername.setText(profile.username)
-            binding.profileData.etEmail.setText(profile.email)
+            val currentUser = viewModel.getCurrentUser()
+            binding.profileData.etUsername.setText("${currentUser?.fullName}")
+            binding.profileData.etEmail.setText("${currentUser?.email}")
         })
     }
 

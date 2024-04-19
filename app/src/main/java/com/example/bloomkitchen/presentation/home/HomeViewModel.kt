@@ -7,23 +7,26 @@ import com.example.bloomkitchen.data.model.Menu
 import com.example.bloomkitchen.data.repository.CartRepository
 import com.example.bloomkitchen.data.repository.CategoryRepository
 import com.example.bloomkitchen.data.repository.MenuRepository
+import com.example.bloomkitchen.data.repository.UserRepository
 import com.example.bloomkitchen.utils.ResultWrapper
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.Dispatchers
 
 class HomeViewModel(
     private val categoryRepository: CategoryRepository,
     private val menuRepository: MenuRepository,
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
-    fun getMenuList() = menuRepository.getMenuList()
-    fun getCategories() = categoryRepository.getCategories()
+    fun getMenu(categorySlug: String? = null) =
+        menuRepository.getMenu(categorySlug).asLiveData(Dispatchers.IO)
+    fun getCategories() = categoryRepository.getCategories().asLiveData(Dispatchers.IO)
+
+    fun getCurrentUser() = userRepository.getCurrentUser()
 
     val menuCountLiveData = MutableLiveData(0).apply {
         postValue(0)
-    }
-    val priceLiveData = MutableLiveData<Double>().apply {
-        postValue(0.0)
     }
 
     fun addItemToCart(menu: Menu) {

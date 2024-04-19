@@ -7,6 +7,7 @@
     tools:context=".presentation.home.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -61,6 +62,30 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_menu"
             app:spanCount="2"
             tools:listitem="@layout/item_menu" />
+
+        <include
+            android:id="@+id/layout_content_state_category"
+            layout="@layout/layout_content_state"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:visibility="gone"
+            android:layout_marginVertical="8dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_menu"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_header" />
+
+        <include
+            android:id="@+id/layout_content_state_menu"
+            layout="@layout/layout_content_state"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_menu" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

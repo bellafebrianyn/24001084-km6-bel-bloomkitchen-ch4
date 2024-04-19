@@ -85,7 +85,7 @@ class CartRepositoryImpl(private val cartDataSource: CartDataSource) : CartRepos
                         menuId = menuId,
                         itemQuantity = quantity,
                         menuName = menu.name,
-                        menuImgUrl = menu.imgUrl,
+                        menuImgUrl = menu.imageUrl,
                         menuPrice = menu.price,
                         itemNotes = notes
                     )
