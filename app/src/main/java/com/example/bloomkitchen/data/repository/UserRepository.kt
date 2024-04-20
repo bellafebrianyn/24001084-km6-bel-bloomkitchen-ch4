@@ -22,7 +22,7 @@ interface UserRepository {
         password: String
     ): Flow<ResultWrapper<Boolean>>
 
-    fun updateProfile(username: String): Flow<ResultWrapper<Boolean>>
+    fun updateProfile(fullName: String? = null): Flow<ResultWrapper<Boolean>>
     fun updatePassword(newPassword: String): Flow<ResultWrapper<Boolean>>
     fun updateEmail(newEmail: String): Flow<ResultWrapper<Boolean>>
     fun requestChangePasswordByEmail(): Boolean
@@ -44,8 +44,8 @@ class UserRepositoryImpl(private val dataSource: AuthDataSource) : UserRepositor
         return proceedFlow { dataSource.doRegister(fullName, email, password) }
     }
 
-    override fun updateProfile(username: String): Flow<ResultWrapper<Boolean>> {
-        return proceedFlow { dataSource.updateProfile(username = username) }
+    override fun updateProfile(fullName: String?): Flow<ResultWrapper<Boolean>> {
+        return proceedFlow { dataSource.updateProfile(fullName = fullName) }
     }
 
     override fun updatePassword(newPassword: String): Flow<ResultWrapper<Boolean>> {

@@ -13,7 +13,7 @@ interface FirebaseService {
 
     @Throws(exceptionClasses = [Exception::class])
     suspend fun doRegister(fullName: String, email: String, password: String): Boolean
-    suspend fun updateProfile(username: String? = null): Boolean
+    suspend fun updateProfile(fullName: String? = null): Boolean
     suspend fun updatePassword(newPassword: String): Boolean
     suspend fun updateEmail(newEmail: String): Boolean
     fun requestChangePasswordByEmail(): Boolean
@@ -44,10 +44,10 @@ class FirebaseServiceImpl() : FirebaseService {
         return registerResult.user != null
     }
 
-    override suspend fun updateProfile(username: String?): Boolean {
+    override suspend fun updateProfile(fullName: String?): Boolean {
         getCurrentUser()?.updateProfile(
             userProfileChangeRequest {
-                username?.let { displayName = username }
+                fullName?.let { displayName = fullName }
             }
         )?.await()
         return true
