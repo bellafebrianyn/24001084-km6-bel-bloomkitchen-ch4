@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class CheckoutRequestPayload(
     @SerializedName("username")
-    val username: String,
+    val fullName: String?,
     @SerializedName("total")
     val total: Double,
     @SerializedName("orders")

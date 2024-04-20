@@ -1,5 +1,6 @@
 package com.example.bloomkitchen.presentation.home
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -51,14 +52,14 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels {
         val service = BloomKitchenApiService.invoke()
         val database = AppDatabase.getInstance(requireContext())
-        val menuDataSource: MenuDataSource = MenuApiDataSource(service)
         val cartDataSource: CartDataSource = CartDatabaseDataSource(database.cartDao())
-        val menuRepository: MenuRepository = MenuRepositoryImpl(menuDataSource)
         val categoryDataSource: CategoryDataSource = CategoryApiDataSource(service)
         val cartRepository = CartRepositoryImpl(cartDataSource)
         val firebaseService: FirebaseService = FirebaseServiceImpl()
         val authDataSource: AuthDataSource = FirebaseAuthDataSource(firebaseService)
         val userRepository: UserRepository = UserRepositoryImpl(authDataSource)
+        val menuDataSource: MenuDataSource = MenuApiDataSource(service)
+        val menuRepository: MenuRepository = MenuRepositoryImpl(menuDataSource, userRepository)
         val categoryRepository: CategoryRepository = CategoryRepositoryImpl(categoryDataSource)
         GenericViewModelFactory.create(
             HomeViewModel(
@@ -111,9 +112,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun setGreetingsName() {
-        val currentUser = viewModel.getCurrentUser()
-        binding.layoutHeader.tvGreetings.text =
-            getString(R.string.greetingsName, currentUser?.fullName)
+        if (!viewModel.userIsLoggedIn()) {
+            binding.layoutHeader.tvGreetings.text = getString(R.string.greetings_guest)
+        } else {
+            val currentUser = viewModel.getCurrentUser()
+            binding.layoutHeader.tvGreetings.text =
+                getString(R.string.greetings_name, currentUser?.fullName)
+        }
     }
 
     private fun setupCategoryList() {
@@ -126,10 +131,10 @@ class HomeFragment : Fragment() {
         viewModel.getCategories().observe(viewLifecycleOwner) {
             it.proceedWhen(
                 doOnSuccess = {
-                    binding.layoutContentStateMenu.root.isVisible = false
-                    binding.layoutContentStateMenu.pbLoading.isVisible = false
-                    binding.layoutContentStateMenu.tvError.isVisible = false
-                    binding.layoutContentStateMenu.tvError.isVisible = false
+                    binding.layoutContentStateCategory.root.isVisible = false
+                    binding.layoutContentStateCategory.pbLoading.isVisible = false
+                    binding.layoutContentStateCategory.tvError.isVisible = false
+                    binding.layoutContentStateCategory.tvError.isVisible = false
                     binding.rvCategory.isVisible = true
                     it.payload?.let { data ->
                         categories = data
@@ -138,27 +143,27 @@ class HomeFragment : Fragment() {
                     setMenuConstraint(false)
                 },
                 doOnError = {
-                    binding.layoutContentStateMenu.root.isVisible = true
-                    binding.layoutContentStateMenu.pbLoading.isVisible = true
-                    binding.layoutContentStateMenu.tvError.isVisible = true
-                    binding.layoutContentStateMenu.tvError.text =
+                    binding.layoutContentStateCategory.root.isVisible = true
+                    binding.layoutContentStateCategory.pbLoading.isVisible = true
+                    binding.layoutContentStateCategory.tvError.isVisible = true
+                    binding.layoutContentStateCategory.tvError.text =
                         it.exception?.message.orEmpty()
                     binding.rvCategory.isVisible = false
                     setMenuConstraint(true)
                 },
                 doOnEmpty = {
-                    binding.layoutContentStateMenu.root.isVisible = true
-                    binding.layoutContentStateMenu.pbLoading.isVisible = false
-                    binding.layoutContentStateMenu.tvError.isVisible = true
-                    binding.layoutContentStateMenu.tvError.text =
+                    binding.layoutContentStateCategory.root.isVisible = true
+                    binding.layoutContentStateCategory.pbLoading.isVisible = false
+                    binding.layoutContentStateCategory.tvError.isVisible = true
+                    binding.layoutContentStateCategory.tvError.text =
                         getString(R.string.category_is_empty)
                     binding.rvCategory.isVisible = false
                     setMenuConstraint(false)
                 },
                 doOnLoading = {
-                    binding.layoutContentStateMenu.root.isVisible = true
-                    binding.layoutContentStateMenu.pbLoading.isVisible = true
-                    binding.layoutContentStateMenu.tvError.isVisible = false
+                    binding.layoutContentStateCategory.root.isVisible = true
+                    binding.layoutContentStateCategory.pbLoading.isVisible = true
+                    binding.layoutContentStateCategory.tvError.isVisible = false
                     binding.rvCategory.isVisible = false
                     setMenuConstraint(true)
                 }
@@ -203,7 +208,6 @@ class HomeFragment : Fragment() {
             else
                 binding.ivChangeListMode.setImageResource(R.drawable.ic_grid)
             bindMenuList(isUsingGrid)
-            loadDataMenu()
             userPreference.setUsingGridMode(isUsingGrid)
         }
     }
@@ -228,6 +232,7 @@ class HomeFragment : Fragment() {
             adapter = this@HomeFragment.menuAdapter
             layoutManager = GridLayoutManager(requireContext(), if (isUsingGrid) 2 else 1)
         }
+        loadDataMenu()
     }
 
     private fun setIconFromPref(isGridMode: Boolean) {

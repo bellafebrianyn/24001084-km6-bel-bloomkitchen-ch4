@@ -24,6 +24,7 @@ class HomeViewModel(
     fun getCategories() = categoryRepository.getCategories().asLiveData(Dispatchers.IO)
 
     fun getCurrentUser() = userRepository.getCurrentUser()
+    fun userIsLoggedIn() = userRepository.isLoggedIn()
 
     val menuCountLiveData = MutableLiveData(0).apply {
         postValue(0)
