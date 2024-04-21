@@ -80,21 +80,6 @@ class CheckoutActivity : AppCompatActivity() {
         setupList()
         observeData()
         setClickListeners()
-        isLogin()
-    }
-
-    private fun isLogin() {
-        lifecycleScope.launch {
-            if (!viewModel.isUserLoggedIn()) {
-                navigateToLogin()
-            }
-        }
-    }
-
-    private fun navigateToLogin() {
-        startActivity(Intent(this, LoginActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        })
     }
 
     private fun setActionOnSuccessOrder() {
@@ -122,11 +107,10 @@ class CheckoutActivity : AppCompatActivity() {
                         dialog.show()
                         btnBackToHome.setOnClickListener {
                             viewModel.deleteAllCarts()
-                            val intent = Intent(this, MainActivity::class.java)
-                            startActivity(intent)
                             dialog.dismiss()
                             finish()
                         }
+
                 }
             )
         }

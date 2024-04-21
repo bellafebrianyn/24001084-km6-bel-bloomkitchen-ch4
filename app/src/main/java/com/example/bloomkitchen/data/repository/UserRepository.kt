@@ -25,6 +25,7 @@ interface UserRepository {
     fun updateProfile(fullName: String? = null): Flow<ResultWrapper<Boolean>>
     fun updatePassword(newPassword: String): Flow<ResultWrapper<Boolean>>
     fun updateEmail(newEmail: String): Flow<ResultWrapper<Boolean>>
+    fun forgetPassword(email: String): Flow<ResultWrapper<Boolean>>
     fun requestChangePasswordByEmail(): Boolean
     fun doLogout(): Boolean
     fun isLoggedIn(): Boolean
@@ -54,6 +55,10 @@ class UserRepositoryImpl(private val dataSource: AuthDataSource) : UserRepositor
 
     override fun updateEmail(newEmail: String): Flow<ResultWrapper<Boolean>> {
         return proceedFlow { dataSource.updateEmail(newEmail) }
+    }
+
+    override fun forgetPassword(email: String): Flow<ResultWrapper<Boolean>> {
+        return proceedFlow { dataSource.forgetPassword(email) }
     }
 
     override fun requestChangePasswordByEmail(): Boolean {

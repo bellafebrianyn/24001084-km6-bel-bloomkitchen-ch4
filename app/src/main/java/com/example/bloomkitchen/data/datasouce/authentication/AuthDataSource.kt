@@ -14,6 +14,7 @@ interface AuthDataSource {
     suspend fun updateProfile(fullName: String? = null): Boolean
     suspend fun updatePassword(newPassword: String): Boolean
     suspend fun updateEmail(newEmail: String): Boolean
+    suspend fun forgetPassword(email: String): Boolean
     fun requestChangePasswordByEmail(): Boolean
     fun doLogout(): Boolean
     fun isLoggedIn(): Boolean
@@ -43,6 +44,10 @@ class FirebaseAuthDataSource(private val service: FirebaseService): AuthDataSour
 
     override suspend fun updateEmail(newEmail: String): Boolean {
         return service.updateEmail(newEmail)
+    }
+
+    override suspend fun forgetPassword(email: String): Boolean {
+        return service.forgetPassword(email)
     }
 
     override fun requestChangePasswordByEmail(): Boolean {

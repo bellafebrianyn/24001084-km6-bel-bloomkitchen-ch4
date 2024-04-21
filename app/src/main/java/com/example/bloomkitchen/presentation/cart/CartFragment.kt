@@ -9,16 +9,23 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.bloomkitchen.R
+import com.example.bloomkitchen.data.datasouce.authentication.AuthDataSource
+import com.example.bloomkitchen.data.datasouce.authentication.FirebaseAuthDataSource
 import com.example.bloomkitchen.data.datasouce.cart.CartDataSource
 import com.example.bloomkitchen.data.datasouce.cart.CartDatabaseDataSource
 import com.example.bloomkitchen.data.model.Cart
 import com.example.bloomkitchen.data.repository.CartRepository
 import com.example.bloomkitchen.data.repository.CartRepositoryImpl
+import com.example.bloomkitchen.data.repository.UserRepository
+import com.example.bloomkitchen.data.repository.UserRepositoryImpl
+import com.example.bloomkitchen.data.source.firebase.FirebaseService
+import com.example.bloomkitchen.data.source.firebase.FirebaseServiceImpl
 import com.example.bloomkitchen.data.source.local.database.AppDatabase
 import com.example.bloomkitchen.databinding.FragmentCartBinding
 import com.example.bloomkitchen.presentation.checkout.CheckoutActivity
 import com.example.bloomkitchen.presentation.common.adapter.CartListAdapter
 import com.example.bloomkitchen.presentation.common.adapter.CartListener
+import com.example.bloomkitchen.presentation.login.LoginActivity
 import com.example.bloomkitchen.utils.GenericViewModelFactory
 import com.example.bloomkitchen.utils.hideKeyboard
 import com.example.bloomkitchen.utils.proceedWhen
@@ -31,8 +38,11 @@ class CartFragment : Fragment() {
     private val viewModel: CartViewModel by viewModels {
         val db = AppDatabase.getInstance(requireContext())
         val ds: CartDataSource = CartDatabaseDataSource(db.cartDao())
-        val rp: CartRepository = CartRepositoryImpl(ds)
-        GenericViewModelFactory.create(CartViewModel(rp))
+        val cartRepository: CartRepository = CartRepositoryImpl(ds)
+        val firebaseService: FirebaseService = FirebaseServiceImpl()
+        val authDataSource: AuthDataSource = FirebaseAuthDataSource(firebaseService)
+        val userRepository: UserRepository = UserRepositoryImpl(authDataSource)
+        GenericViewModelFactory.create(CartViewModel(cartRepository, userRepository))
     }
 
     private val adapter: CartListAdapter by lazy {
@@ -73,9 +83,19 @@ class CartFragment : Fragment() {
     }
 
     private fun setClickListeners() {
-        binding.layoutSectionCheckout.btnCheckout.setOnClickListener {
-            startActivity(Intent(requireContext(), CheckoutActivity::class.java))
-        }
+            binding.layoutSectionCheckout.btnCheckout.setOnClickListener {
+                if (viewModel.isLoggedIn()) {
+                    startActivity(Intent(requireContext(), CheckoutActivity::class.java))
+                } else {
+                    navigateToLogin()
+                }
+            }
+    }
+
+    private fun navigateToLogin() {
+        startActivity(Intent(requireContext(), LoginActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        })
     }
 
     private fun observeData() {

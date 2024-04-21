@@ -2,10 +2,13 @@ package com.example.bloomkitchen.presentation.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.util.Patterns
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.bloomkitchen.R
@@ -51,6 +54,67 @@ class LoginActivity : AppCompatActivity() {
         binding.layoutFormLogin.tvNavToRegister.highLightWord(getString(R.string.highlight_register)) {
             navigateToRegister()
         }
+
+        binding.layoutFormLogin.tvForgetPassword.setOnClickListener {
+            showResetPasswordDialog()
+        }
+    }
+
+    private fun showResetPasswordDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.reset_password))
+
+        val input = EditText(this)
+        input.hint = getString(R.string.enter_email)
+        input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+        builder.setView(input)
+
+        builder.setPositiveButton(getString(R.string.send)) { dialog, _ ->
+            val email = input.text.toString().trim()
+            if (email.isNotEmpty()) {
+                handleResetPassword(email)
+            } else {
+                Toast.makeText(this, getString(R.string.enter_email), Toast.LENGTH_SHORT).show()
+            }
+            dialog.dismiss()
+        }
+        builder.setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        builder.show()
+    }
+
+    private fun handleResetPassword(email: String) {
+        viewModel.forgetPassword(email).observe(this) { result ->
+            result.proceedWhen(
+                doOnSuccess = {
+                    resetPasswordSuccessDialog()
+                },
+                doOnError = {
+                    Toast.makeText(
+                        this,
+                        "Error :  ${it.exception?.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.d(
+                        "reqChangePasswordByEmail",
+                        "createEmailInputDialog: ${it.exception?.message}"
+                    )
+                }
+            )
+        }
+    }
+
+    private fun resetPasswordSuccessDialog() {
+        val dialog = AlertDialog.Builder(this)
+            .setMessage(getString(R.string.dialog_dialog_req_update_password))
+            .setPositiveButton(
+                getString(R.string.oke)
+            ) { dialog, id ->
+
+            }.create()
+        dialog.show()
     }
 
     private fun navigateToRegister() {
@@ -78,7 +142,7 @@ class LoginActivity : AppCompatActivity() {
         viewModel.doLogin(email, password).observe(this) { result ->
             result.proceedWhen(
                 doOnSuccess = {
-                    binding.layoutFormLogin.pbLoading.isVisible= false
+                    binding.layoutFormLogin.pbLoading.isVisible = false
                     binding.layoutFormLogin.btnLogin.isVisible = true
                     navigateToMain()
                 },
@@ -109,7 +173,10 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun checkPasswordValidation(confirmPassword: String, textInputLayout: TextInputLayout): Boolean {
+    private fun checkPasswordValidation(
+        confirmPassword: String,
+        textInputLayout: TextInputLayout
+    ): Boolean {
         return if (confirmPassword.isEmpty()) {
             textInputLayout.isErrorEnabled = true
             textInputLayout.error =

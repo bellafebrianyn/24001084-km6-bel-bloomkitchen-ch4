@@ -16,6 +16,7 @@ interface FirebaseService {
     suspend fun updateProfile(fullName: String? = null): Boolean
     suspend fun updatePassword(newPassword: String): Boolean
     suspend fun updateEmail(newEmail: String): Boolean
+    suspend fun forgetPassword(email: String): Boolean
     fun requestChangePasswordByEmail(): Boolean
     fun doLogout(): Boolean
     fun isLoggedIn(): Boolean
@@ -60,6 +61,13 @@ class FirebaseServiceImpl() : FirebaseService {
 
     override suspend fun updateEmail(newEmail: String): Boolean {
         getCurrentUser()?.verifyBeforeUpdateEmail(newEmail)?.await()
+        return true
+    }
+
+    override suspend fun forgetPassword(email: String): Boolean {
+        email.let {
+            firebaseAuth.sendPasswordResetEmail(it)
+        }
         return true
     }
 
