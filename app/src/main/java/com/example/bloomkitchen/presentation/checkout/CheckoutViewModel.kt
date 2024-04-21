@@ -28,6 +28,4 @@ class CheckoutViewModel(
             cartRepository.deleteAllCarts().collect()
         }
     }
-
-    fun isUserLoggedIn() = userRepository.isLoggedIn()
 }
