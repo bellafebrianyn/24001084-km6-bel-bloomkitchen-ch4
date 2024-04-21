@@ -94,12 +94,12 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         userPreference = UserPreferenceImpl(requireContext())
         val isUsingGridMode = userPreference.isUsingGridMode()
-        setupCategoryList()
-        loadDataCategory()
-        loadDataMenu()
         bindMenuList(isUsingGridMode)
         setClickAction(isUsingGridMode)
         setIconFromPref(isUsingGridMode)
+        setupCategoryList()
+        loadDataCategory()
+        loadDataMenu()
         setGreetingsName()
     }
 
@@ -208,6 +208,7 @@ class HomeFragment : Fragment() {
             else
                 binding.ivChangeListMode.setImageResource(R.drawable.ic_grid)
             bindMenuList(isUsingGrid)
+            loadDataMenu()
             userPreference.setUsingGridMode(isUsingGrid)
         }
     }
@@ -232,7 +233,6 @@ class HomeFragment : Fragment() {
             adapter = this@HomeFragment.menuAdapter
             layoutManager = GridLayoutManager(requireContext(), if (isUsingGrid) 2 else 1)
         }
-        loadDataMenu()
     }
 
     private fun setIconFromPref(isGridMode: Boolean) {

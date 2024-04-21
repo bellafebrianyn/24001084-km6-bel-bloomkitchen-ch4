@@ -10,4 +10,9 @@ class LoginViewModel(private val repository: UserRepository): ViewModel() {
         repository
             .doLogin(email, password)
             .asLiveData(Dispatchers.IO)
+
+    fun forgetPassword(email: String) =
+        repository
+            .forgetPassword(email)
+            .asLiveData(Dispatchers.IO)
 }

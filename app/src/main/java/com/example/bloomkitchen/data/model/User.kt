@@ -12,6 +12,6 @@ fun FirebaseUser?.toUser() = this?.let {
     User(
         id = this.uid,
         fullName = this.displayName.orEmpty(),
-        email = this.email.orEmpty()
+        email = this.email.orEmpty(),
     )
 }
