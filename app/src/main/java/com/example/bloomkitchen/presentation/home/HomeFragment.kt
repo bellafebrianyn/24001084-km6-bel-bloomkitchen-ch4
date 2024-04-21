@@ -1,6 +1,5 @@
 package com.example.bloomkitchen.presentation.home
 
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -69,8 +68,6 @@ class HomeFragment : Fragment() {
                 userRepository
             )
         )
-
-
     }
 
     private val categoryAdapter: CategoryListAdapter by lazy {

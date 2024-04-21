@@ -1,21 +1,11 @@
 package com.example.bloomkitchen.presentation.checkout
 
-import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
-import android.view.WindowManager
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.example.bloomkitchen.R
 import com.example.bloomkitchen.data.datasouce.authentication.AuthDataSource
 import com.example.bloomkitchen.data.datasouce.authentication.FirebaseAuthDataSource
@@ -34,15 +24,12 @@ import com.example.bloomkitchen.data.source.firebase.FirebaseServiceImpl
 import com.example.bloomkitchen.data.source.local.database.AppDatabase
 import com.example.bloomkitchen.data.source.network.service.BloomKitchenApiService
 import com.example.bloomkitchen.databinding.ActivityCheckoutBinding
+import com.example.bloomkitchen.databinding.LayoutDialogOrderBinding
 import com.example.bloomkitchen.presentation.checkout.adapter.PriceListAdapter
 import com.example.bloomkitchen.presentation.common.adapter.CartListAdapter
-import com.example.bloomkitchen.presentation.login.LoginActivity
-import com.example.bloomkitchen.presentation.main.MainActivity
-import com.example.bloomkitchen.presentation.profile.ProfileViewModel
 import com.example.bloomkitchen.utils.GenericViewModelFactory
 import com.example.bloomkitchen.utils.proceedWhen
 import com.example.bloomkitchen.utils.toIndonesianFormat
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -80,40 +67,43 @@ class CheckoutActivity : AppCompatActivity() {
         setupList()
         observeData()
         setClickListeners()
+        setActionOnSuccessOrder()
     }
 
     private fun setActionOnSuccessOrder() {
         viewModel.checkoutData.observe(this) { result ->
             result.proceedWhen (
                 doOnSuccess = {
-
-                        val dialog = Dialog(this)
-                        dialog.setContentView(R.layout.layout_dialog_order)
-                        val layoutParams = WindowManager.LayoutParams()
-                        layoutParams.copyFrom(dialog.window?.attributes)
-                        dialog.window?.attributes = layoutParams
-
-                        val dateAndTime = SimpleDateFormat("dd MMMM yyyy HH:mm:ss").format(Date())
-                        val tvDate = dialog.findViewById<TextView>(R.id.tv_transaction_date)
-                        tvDate.text = dateAndTime
-
-                        val generatedNumber = NumberGenerator.generateNextNumber()
-                        val tvNumber = dialog.findViewById<TextView>(R.id.tv_transaction_number)
-                        tvNumber.text = generatedNumber
-
-                        val rvSummaryOrder = dialog.findViewById<RecyclerView>(R.id.rv_summary_order)
-                        rvSummaryOrder.adapter = priceItemAdapter
-                        val btnBackToHome = dialog.findViewById<Button>(R.id.btn_back_to_home)
-                        dialog.show()
-                        btnBackToHome.setOnClickListener {
-                            viewModel.deleteAllCarts()
-                            dialog.dismiss()
-                            finish()
-                        }
-
+                    binding.layoutSectionCheckout.btnCheckout.setOnClickListener {
+                        showDialog()
+                    }
                 }
             )
         }
+    }
+
+    private fun showDialog() {
+            val binding: LayoutDialogOrderBinding = LayoutDialogOrderBinding.inflate(layoutInflater)
+            val dialog = AlertDialog.Builder(this).create()
+
+            val dateAndTime = SimpleDateFormat("dd MMMM yyyy HH:mm:ss").format(Date())
+            binding.tvTransactionDate.text = dateAndTime
+
+            val generatedNumber = NumberGenerator.generateNextNumber()
+            binding.tvTransactionNumber.text = generatedNumber
+
+            binding.rvSummaryOrder.adapter = priceItemAdapter
+
+            binding.btnBackToHome.setOnClickListener {
+                viewModel.deleteAllCarts()
+                dialog.dismiss()
+                finish()
+            }
+
+            dialog.apply {
+                setView(binding.root)
+                show()
+            }
     }
 
     object NumberGenerator {
