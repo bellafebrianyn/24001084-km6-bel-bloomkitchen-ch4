@@ -5,20 +5,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import coil.load
 import com.example.bloomkitchen.R
-import com.example.bloomkitchen.data.datasouce.cart.CartDataSource
-import com.example.bloomkitchen.data.datasouce.cart.CartDatabaseDataSource
 import com.example.bloomkitchen.data.model.Menu
-import com.example.bloomkitchen.data.repository.CartRepository
-import com.example.bloomkitchen.data.repository.CartRepositoryImpl
-import com.example.bloomkitchen.data.source.local.database.AppDatabase
 import com.example.bloomkitchen.databinding.ActivityDetailBinding
-import com.example.bloomkitchen.utils.GenericViewModelFactory
 import com.example.bloomkitchen.utils.proceedWhen
 import com.example.bloomkitchen.utils.toIndonesianFormat
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class DetailActivity : AppCompatActivity() {
 
@@ -36,33 +31,28 @@ class DetailActivity : AppCompatActivity() {
         ActivityDetailBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: DetailMenuViewModel by viewModels {
-        val db = AppDatabase.getInstance(this)
-        val ds: CartDataSource = CartDatabaseDataSource(db.cartDao())
-        val rp: CartRepository = CartRepositoryImpl(ds)
-        GenericViewModelFactory.create(
-            DetailMenuViewModel(intent?.extras, rp)
-        )
+    private val detailViewModel: DetailMenuViewModel by viewModel {
+        parametersOf(intent.extras)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        bindMenu(viewModel.menu)
+        bindMenu(detailViewModel.menu)
         setClickListener()
-        navigateToGoogleMaps(viewModel.menu)
+        navigateToGoogleMaps(detailViewModel.menu)
         observeData()
     }
 
     private fun observeData() {
-        viewModel.priceLiveData.observe(this) {
+        detailViewModel.priceLiveData.observe(this) {
             binding.layoutAddToCart.btnTotalPrice.isEnabled = it != 0.0
             binding.layoutAddToCart.btnTotalPrice.text = getString(
                 R.string.add_to_cart_price,
                 it.toIndonesianFormat()
             )
         }
-        viewModel.menuCountLiveData.observe(this) {
+        detailViewModel.menuCountLiveData.observe(this) {
             binding.layoutAddToCart.tvQuantity.text = it.toString()
         }
     }
@@ -72,10 +62,10 @@ class DetailActivity : AppCompatActivity() {
             onBackPressed()
         }
         binding.layoutAddToCart.icDecrease.setOnClickListener {
-            viewModel.minus()
+            detailViewModel.minus()
         }
         binding.layoutAddToCart.icIncrease.setOnClickListener {
-            viewModel.add()
+            detailViewModel.add()
         }
         binding.layoutAddToCart.btnTotalPrice.setOnClickListener {
             addProductToCart()
@@ -83,7 +73,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun addProductToCart() {
-        viewModel.addToCart().observe(this) {
+        detailViewModel.addToCart().observe(this) {
             it.proceedWhen(
                 doOnSuccess = {
                     Toast.makeText(this, "Add to Cart Success", Toast.LENGTH_SHORT).show()

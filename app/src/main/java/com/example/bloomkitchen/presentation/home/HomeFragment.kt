@@ -7,76 +7,32 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.bloomkitchen.R
-import com.example.bloomkitchen.data.datasouce.authentication.AuthDataSource
-import com.example.bloomkitchen.data.datasouce.authentication.FirebaseAuthDataSource
-import com.example.bloomkitchen.data.datasouce.cart.CartDataSource
-import com.example.bloomkitchen.data.datasouce.cart.CartDatabaseDataSource
-import com.example.bloomkitchen.data.datasouce.category.CategoryApiDataSource
-import com.example.bloomkitchen.data.datasouce.category.CategoryDataSource
-import com.example.bloomkitchen.data.datasouce.menu.MenuApiDataSource
-import com.example.bloomkitchen.data.datasouce.menu.MenuDataSource
 import com.example.bloomkitchen.data.model.Category
 import com.example.bloomkitchen.data.model.Menu
-import com.example.bloomkitchen.data.repository.CartRepositoryImpl
-import com.example.bloomkitchen.data.repository.CategoryRepository
-import com.example.bloomkitchen.data.repository.CategoryRepositoryImpl
-import com.example.bloomkitchen.data.repository.MenuRepository
-import com.example.bloomkitchen.data.repository.MenuRepositoryImpl
-import com.example.bloomkitchen.data.repository.UserRepository
-import com.example.bloomkitchen.data.repository.UserRepositoryImpl
-import com.example.bloomkitchen.data.source.firebase.FirebaseService
-import com.example.bloomkitchen.data.source.firebase.FirebaseServiceImpl
-import com.example.bloomkitchen.data.source.local.database.AppDatabase
-import com.example.bloomkitchen.data.source.local.pref.UserPreference
-import com.example.bloomkitchen.data.source.local.pref.UserPreferenceImpl
-import com.example.bloomkitchen.data.source.network.service.BloomKitchenApiService
 import com.example.bloomkitchen.databinding.FragmentHomeBinding
 import com.example.bloomkitchen.presentation.detailproduct.DetailActivity
 import com.example.bloomkitchen.presentation.home.adapter.CategoryListAdapter
 import com.example.bloomkitchen.presentation.home.adapter.MenuAdapter
 import com.example.bloomkitchen.presentation.home.adapter.OnItemClickedListener
-import com.example.bloomkitchen.utils.GenericViewModelFactory
 import com.example.bloomkitchen.utils.proceedWhen
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var userPreference: UserPreference
     private var categories: List<Category>? = null
     private var menuList: List<Menu>? = null
+    private var menuAdapter: MenuAdapter? = null
 
-    private val viewModel: HomeViewModel by viewModels {
-        val service = BloomKitchenApiService.invoke()
-        val database = AppDatabase.getInstance(requireContext())
-        val cartDataSource: CartDataSource = CartDatabaseDataSource(database.cartDao())
-        val categoryDataSource: CategoryDataSource = CategoryApiDataSource(service)
-        val cartRepository = CartRepositoryImpl(cartDataSource)
-        val firebaseService: FirebaseService = FirebaseServiceImpl()
-        val authDataSource: AuthDataSource = FirebaseAuthDataSource(firebaseService)
-        val userRepository: UserRepository = UserRepositoryImpl(authDataSource)
-        val menuDataSource: MenuDataSource = MenuApiDataSource(service)
-        val menuRepository: MenuRepository = MenuRepositoryImpl(menuDataSource, userRepository)
-        val categoryRepository: CategoryRepository = CategoryRepositoryImpl(categoryDataSource)
-        GenericViewModelFactory.create(
-            HomeViewModel(
-                categoryRepository,
-                menuRepository,
-                cartRepository,
-                userRepository
-            )
-        )
-    }
+    private val homeViewModel: HomeViewModel by viewModel()
 
     private val categoryAdapter: CategoryListAdapter by lazy {
         CategoryListAdapter {
             getMenuData(it.name)
         }
     }
-
-    private var menuAdapter: MenuAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -89,8 +45,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userPreference = UserPreferenceImpl(requireContext())
-        val isUsingGridMode = userPreference.isUsingGridMode()
+        val isUsingGridMode = homeViewModel.isUsingGridMode()
         bindMenuList(isUsingGridMode)
         setClickAction(isUsingGridMode)
         setIconFromPref(isUsingGridMode)
@@ -109,10 +64,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun setGreetingsName() {
-        if (!viewModel.userIsLoggedIn()) {
+        if (!homeViewModel.userIsLoggedIn()) {
             binding.layoutHeader.tvGreetings.text = getString(R.string.greetings_guest)
         } else {
-            val currentUser = viewModel.getCurrentUser()
+            val currentUser = homeViewModel.getCurrentUser()
             binding.layoutHeader.tvGreetings.text =
                 getString(R.string.greetings_name, currentUser?.fullName)
         }
@@ -125,7 +80,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getCategoryData() {
-        viewModel.getCategories().observe(viewLifecycleOwner) {
+        homeViewModel.getCategories().observe(viewLifecycleOwner) {
             it.proceedWhen(
                 doOnSuccess = {
                     binding.layoutContentStateCategory.root.isVisible = false
@@ -206,7 +161,7 @@ class HomeFragment : Fragment() {
                 binding.ivChangeListMode.setImageResource(R.drawable.ic_grid)
             bindMenuList(isUsingGrid)
             loadDataMenu()
-            userPreference.setUsingGridMode(isUsingGrid)
+            homeViewModel.setUsingGridMode(isUsingGrid)
         }
     }
 
@@ -221,7 +176,7 @@ class HomeFragment : Fragment() {
                     }
 
                     override fun onItemAddedToCart(item: Menu) {
-                        viewModel.addItemToCart(item)
+                        homeViewModel.addItemToCart(item)
                     }
 
                 })
@@ -241,7 +196,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getMenuData(categoryName: String? = null) {
-        viewModel.getMenu(categoryName).observe(viewLifecycleOwner) {
+        homeViewModel.getMenu(categoryName).observe(viewLifecycleOwner) {
             it.proceedWhen(
                 doOnSuccess = {
                     binding.layoutContentStateMenu.root.isVisible = false

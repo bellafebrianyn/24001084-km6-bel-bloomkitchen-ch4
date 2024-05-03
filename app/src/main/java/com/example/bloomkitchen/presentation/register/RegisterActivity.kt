@@ -4,23 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.bloomkitchen.R
-import com.example.bloomkitchen.data.datasouce.authentication.AuthDataSource
-import com.example.bloomkitchen.data.datasouce.authentication.FirebaseAuthDataSource
-import com.example.bloomkitchen.data.repository.UserRepository
-import com.example.bloomkitchen.data.repository.UserRepositoryImpl
-import com.example.bloomkitchen.data.source.firebase.FirebaseService
-import com.example.bloomkitchen.data.source.firebase.FirebaseServiceImpl
 import com.example.bloomkitchen.databinding.ActivityRegisterBinding
 import com.example.bloomkitchen.presentation.login.LoginActivity
 import com.example.bloomkitchen.presentation.main.MainActivity
-import com.example.bloomkitchen.utils.GenericViewModelFactory
 import com.example.bloomkitchen.utils.highLightWord
 import com.example.bloomkitchen.utils.proceedWhen
 import com.google.android.material.textfield.TextInputLayout
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -28,12 +21,7 @@ class RegisterActivity : AppCompatActivity() {
         ActivityRegisterBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: RegisterViewModel by viewModels {
-        val s: FirebaseService = FirebaseServiceImpl()
-        val ds: AuthDataSource = FirebaseAuthDataSource(s)
-        val r: UserRepository = UserRepositoryImpl(ds)
-        GenericViewModelFactory.create(RegisterViewModel(r))
-    }
+    private val registerViewModel: RegisterViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +60,7 @@ class RegisterActivity : AppCompatActivity() {
         email: String,
         password: String
     ) {
-        viewModel.doRegister(fullName, email, password).observe(this) {
+        registerViewModel.doRegister(fullName, email, password).observe(this) {
             it.proceedWhen(
                 doOnSuccess = {
                     binding.layoutFormRegister.pbLoading.isVisible = false
