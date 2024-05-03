@@ -2,20 +2,13 @@ package com.example.bloomkitchen.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.bloomkitchen.R
-import com.example.bloomkitchen.data.datasouce.authentication.AuthDataSource
-import com.example.bloomkitchen.data.datasouce.authentication.FirebaseAuthDataSource
-import com.example.bloomkitchen.data.repository.UserRepository
-import com.example.bloomkitchen.data.repository.UserRepositoryImpl
-import com.example.bloomkitchen.data.source.firebase.FirebaseService
-import com.example.bloomkitchen.data.source.firebase.FirebaseServiceImpl
 import com.example.bloomkitchen.databinding.ActivityMainBinding
 import com.example.bloomkitchen.presentation.login.LoginActivity
-import com.example.bloomkitchen.utils.GenericViewModelFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,12 +18,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private val viewModel: MainViewModel by viewModels {
-        val service: FirebaseService = FirebaseServiceImpl()
-        val authDataSource: AuthDataSource = FirebaseAuthDataSource(service)
-        val userRepository: UserRepository = UserRepositoryImpl(authDataSource)
-        GenericViewModelFactory.create(MainViewModel(userRepository))
-    }
+    private val mainViewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         navigationController.addOnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
                 R.id.menu_tab_profile -> {
-                    if(!viewModel.isUserLoggedIn()){
+                    if(!mainViewModel.isUserLoggedIn()){
                         navigateToLogin()
                         controller.popBackStack(R.id.menu_tab_home, false)
                     }

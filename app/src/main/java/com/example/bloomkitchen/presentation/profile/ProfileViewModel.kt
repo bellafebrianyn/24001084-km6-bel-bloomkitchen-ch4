@@ -4,22 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.example.bloomkitchen.data.datasouce.authentication.FirebaseAuthDataSource
 import com.example.bloomkitchen.data.datasource.ProfileDataSource
 import com.example.bloomkitchen.data.datasource.ProfileDataSourceImpl
 import com.example.bloomkitchen.data.model.Profile
 import com.example.bloomkitchen.data.repository.UserRepository
-import com.example.bloomkitchen.data.repository.UserRepositoryImpl
-import com.example.bloomkitchen.data.source.firebase.FirebaseServiceImpl
 import kotlinx.coroutines.Dispatchers
 
-class ProfileViewModel(private val userRepository: UserRepository): ViewModel() {
+class ProfileViewModel(
+    private val userRepository: UserRepository,
+    private val profileDataSource: ProfileDataSource
+) : ViewModel() {
 
-    constructor() : this(UserRepositoryImpl(FirebaseAuthDataSource(FirebaseServiceImpl())))
-
-    private val profileDataSource: ProfileDataSource by lazy {
-        ProfileDataSourceImpl()
-    }
     private val _profileData = MutableLiveData<Profile>()
     val profileData: LiveData<Profile>
         get() = _profileData

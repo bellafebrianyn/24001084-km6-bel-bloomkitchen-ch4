@@ -7,6 +7,7 @@ import com.example.bloomkitchen.data.model.Menu
 import com.example.bloomkitchen.data.repository.CartRepository
 import com.example.bloomkitchen.data.repository.CategoryRepository
 import com.example.bloomkitchen.data.repository.MenuRepository
+import com.example.bloomkitchen.data.repository.UserPreferenceRepository
 import com.example.bloomkitchen.data.repository.UserRepository
 import com.example.bloomkitchen.utils.ResultWrapper
 import com.google.firebase.auth.FirebaseUser
@@ -16,7 +17,8 @@ class HomeViewModel(
     private val categoryRepository: CategoryRepository,
     private val menuRepository: MenuRepository,
     private val cartRepository: CartRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val userPreferenceRepository: UserPreferenceRepository
 ) : ViewModel() {
 
     fun getMenu(categorySlug: String? = null) =
@@ -55,4 +57,7 @@ class HomeViewModel(
             }
     }
 
+    fun isUsingGridMode() = userPreferenceRepository.isUsingGridMode()
+    fun setUsingGridMode(isUsingGridMode: Boolean) =
+        userPreferenceRepository.setUsingGridMode(isUsingGridMode)
 }

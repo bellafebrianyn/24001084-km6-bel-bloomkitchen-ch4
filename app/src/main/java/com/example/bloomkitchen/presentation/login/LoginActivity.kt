@@ -7,24 +7,17 @@ import android.util.Log
 import android.util.Patterns
 import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.bloomkitchen.R
-import com.example.bloomkitchen.data.datasouce.authentication.AuthDataSource
-import com.example.bloomkitchen.data.datasouce.authentication.FirebaseAuthDataSource
-import com.example.bloomkitchen.data.repository.UserRepository
-import com.example.bloomkitchen.data.repository.UserRepositoryImpl
-import com.example.bloomkitchen.data.source.firebase.FirebaseService
-import com.example.bloomkitchen.data.source.firebase.FirebaseServiceImpl
 import com.example.bloomkitchen.databinding.ActivityLoginBinding
 import com.example.bloomkitchen.presentation.main.MainActivity
 import com.example.bloomkitchen.presentation.register.RegisterActivity
-import com.example.bloomkitchen.utils.GenericViewModelFactory
 import com.example.bloomkitchen.utils.highLightWord
 import com.example.bloomkitchen.utils.proceedWhen
 import com.google.android.material.textfield.TextInputLayout
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
 
@@ -32,12 +25,7 @@ class LoginActivity : AppCompatActivity() {
         ActivityLoginBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: LoginViewModel by viewModels {
-        val service: FirebaseService = FirebaseServiceImpl()
-        val authDataSource: AuthDataSource = FirebaseAuthDataSource(service)
-        val userRepository: UserRepository = UserRepositoryImpl(authDataSource)
-        GenericViewModelFactory.create(LoginViewModel(userRepository))
-    }
+    private val loginViewModel: LoginViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +74,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun handleResetPassword(email: String) {
-        viewModel.forgetPassword(email).observe(this) { result ->
+        loginViewModel.forgetPassword(email).observe(this) { result ->
             result.proceedWhen(
                 doOnSuccess = {
                     resetPasswordSuccessDialog()
@@ -139,7 +127,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun proceedLogin(email: String, password: String) {
-        viewModel.doLogin(email, password).observe(this) { result ->
+        loginViewModel.doLogin(email, password).observe(this) { result ->
             result.proceedWhen(
                 doOnSuccess = {
                     binding.layoutFormLogin.pbLoading.isVisible = false

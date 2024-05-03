@@ -2,34 +2,17 @@ package com.example.bloomkitchen.presentation.checkout
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.bloomkitchen.R
-import com.example.bloomkitchen.data.datasouce.authentication.AuthDataSource
-import com.example.bloomkitchen.data.datasouce.authentication.FirebaseAuthDataSource
-import com.example.bloomkitchen.data.datasouce.cart.CartDataSource
-import com.example.bloomkitchen.data.datasouce.cart.CartDatabaseDataSource
-import com.example.bloomkitchen.data.datasouce.menu.MenuApiDataSource
-import com.example.bloomkitchen.data.datasouce.menu.MenuDataSource
-import com.example.bloomkitchen.data.repository.CartRepository
-import com.example.bloomkitchen.data.repository.CartRepositoryImpl
-import com.example.bloomkitchen.data.repository.MenuRepository
-import com.example.bloomkitchen.data.repository.MenuRepositoryImpl
-import com.example.bloomkitchen.data.repository.UserRepository
-import com.example.bloomkitchen.data.repository.UserRepositoryImpl
-import com.example.bloomkitchen.data.source.firebase.FirebaseService
-import com.example.bloomkitchen.data.source.firebase.FirebaseServiceImpl
-import com.example.bloomkitchen.data.source.local.database.AppDatabase
-import com.example.bloomkitchen.data.source.network.service.BloomKitchenApiService
 import com.example.bloomkitchen.databinding.ActivityCheckoutBinding
 import com.example.bloomkitchen.databinding.LayoutDialogOrderBinding
 import com.example.bloomkitchen.presentation.checkout.adapter.PriceListAdapter
 import com.example.bloomkitchen.presentation.common.adapter.CartListAdapter
-import com.example.bloomkitchen.utils.GenericViewModelFactory
 import com.example.bloomkitchen.utils.proceedWhen
 import com.example.bloomkitchen.utils.toIndonesianFormat
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -38,18 +21,7 @@ class CheckoutActivity : AppCompatActivity() {
         ActivityCheckoutBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: CheckoutViewModel by viewModels {
-        val s = BloomKitchenApiService.invoke()
-        val db = AppDatabase.getInstance(this)
-        val ds: CartDataSource = CartDatabaseDataSource(db.cartDao())
-        val cartRepository: CartRepository = CartRepositoryImpl(ds)
-        val service: FirebaseService = FirebaseServiceImpl()
-        val authDataSource: AuthDataSource = FirebaseAuthDataSource(service)
-        val userRepository: UserRepository = UserRepositoryImpl(authDataSource)
-        val menuDataSource: MenuDataSource = MenuApiDataSource(s)
-        val menuRepository: MenuRepository = MenuRepositoryImpl(menuDataSource, userRepository)
-        GenericViewModelFactory.create(CheckoutViewModel(cartRepository,userRepository, menuRepository))
-    }
+    private val checkoutViewModel: CheckoutViewModel by viewModel()
 
     private val adapter: CartListAdapter by lazy {
         CartListAdapter()
@@ -71,7 +43,7 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun setActionOnSuccessOrder() {
-        viewModel.checkoutData.observe(this) { result ->
+        checkoutViewModel.checkoutData.observe(this) { result ->
             result.proceedWhen (
                 doOnSuccess = {
                     binding.layoutSectionCheckout.btnCheckout.setOnClickListener {
@@ -95,7 +67,7 @@ class CheckoutActivity : AppCompatActivity() {
             binding.rvSummaryOrder.adapter = priceItemAdapter
 
             binding.btnBackToHome.setOnClickListener {
-                viewModel.deleteAllCarts()
+                checkoutViewModel.deleteAllCarts()
                 dialog.dismiss()
                 finish()
             }
@@ -125,7 +97,7 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun doCheckout() {
-        viewModel.checkoutCart().observe(this) {
+        checkoutViewModel.checkoutCart().observe(this) {
             it.proceedWhen(
                 doOnSuccess = {
                     binding.layoutState.root.isVisible = false
@@ -133,7 +105,7 @@ class CheckoutActivity : AppCompatActivity() {
                     binding.layoutState.tvError.isVisible = false
                     binding.layoutContent.root.isVisible = true
                     binding.layoutContent.rvCart.isVisible = true
-                    viewModel.deleteAllCarts()
+                    checkoutViewModel.deleteAllCarts()
                     setActionOnSuccessOrder()
                 },
                 doOnLoading = {
@@ -162,7 +134,7 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun observeData() {
-        viewModel.checkoutData.observe(this) { result ->
+        checkoutViewModel.checkoutData.observe(this) { result ->
             result.proceedWhen(doOnSuccess = {
                 binding.layoutState.root.isVisible = false
                 binding.layoutState.pbLoading.isVisible = false
