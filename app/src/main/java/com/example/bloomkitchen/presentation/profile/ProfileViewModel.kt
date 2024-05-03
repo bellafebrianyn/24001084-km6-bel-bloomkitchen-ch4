@@ -5,16 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.example.bloomkitchen.data.datasource.ProfileDataSource
-import com.example.bloomkitchen.data.datasource.ProfileDataSourceImpl
 import com.example.bloomkitchen.data.model.Profile
 import com.example.bloomkitchen.data.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 
 class ProfileViewModel(
     private val userRepository: UserRepository,
-    private val profileDataSource: ProfileDataSource
+    private val profileDataSource: ProfileDataSource,
 ) : ViewModel() {
-
     private val _profileData = MutableLiveData<Profile>()
     val profileData: LiveData<Profile>
         get() = _profileData
@@ -43,5 +41,4 @@ class ProfileViewModel(
     fun isUserLoggedOut() = userRepository.doLogout()
 
     fun getCurrentUser() = userRepository.getCurrentUser()
-
 }

@@ -29,7 +29,6 @@ class CheckoutActivity : AppCompatActivity() {
 
     private val priceItemAdapter: PriceListAdapter by lazy {
         PriceListAdapter {
-
         }
     }
 
@@ -44,38 +43,38 @@ class CheckoutActivity : AppCompatActivity() {
 
     private fun setActionOnSuccessOrder() {
         checkoutViewModel.checkoutData.observe(this) { result ->
-            result.proceedWhen (
+            result.proceedWhen(
                 doOnSuccess = {
                     binding.layoutSectionCheckout.btnCheckout.setOnClickListener {
                         showDialog()
                     }
-                }
+                },
             )
         }
     }
 
     private fun showDialog() {
-            val binding: LayoutDialogOrderBinding = LayoutDialogOrderBinding.inflate(layoutInflater)
-            val dialog = AlertDialog.Builder(this).create()
+        val binding: LayoutDialogOrderBinding = LayoutDialogOrderBinding.inflate(layoutInflater)
+        val dialog = AlertDialog.Builder(this).create()
 
-            val dateAndTime = SimpleDateFormat("dd MMMM yyyy HH:mm:ss").format(Date())
-            binding.tvTransactionDate.text = dateAndTime
+        val dateAndTime = SimpleDateFormat("dd MMMM yyyy HH:mm:ss").format(Date())
+        binding.tvTransactionDate.text = dateAndTime
 
-            val generatedNumber = NumberGenerator.generateNextNumber()
-            binding.tvTransactionNumber.text = generatedNumber
+        val generatedNumber = NumberGenerator.generateNextNumber()
+        binding.tvTransactionNumber.text = generatedNumber
 
-            binding.rvSummaryOrder.adapter = priceItemAdapter
+        binding.rvSummaryOrder.adapter = priceItemAdapter
 
-            binding.btnBackToHome.setOnClickListener {
-                checkoutViewModel.deleteAllCarts()
-                dialog.dismiss()
-                finish()
-            }
+        binding.btnBackToHome.setOnClickListener {
+            checkoutViewModel.deleteAllCarts()
+            dialog.dismiss()
+            finish()
+        }
 
-            dialog.apply {
-                setView(binding.root)
-                show()
-            }
+        dialog.apply {
+            setView(binding.root)
+            show()
+        }
     }
 
     object NumberGenerator {
@@ -120,10 +119,12 @@ class CheckoutActivity : AppCompatActivity() {
                     binding.layoutState.pbLoading.isVisible = false
                     binding.layoutContent.root.isVisible = false
                     binding.layoutContent.rvCart.isVisible = false
-                    Toast.makeText(this,
+                    Toast.makeText(
+                        this,
                         getString(R.string.error_checkout),
-                        Toast.LENGTH_SHORT).show()
-                }
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                },
             )
         }
     }

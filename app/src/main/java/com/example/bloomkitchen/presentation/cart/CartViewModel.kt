@@ -13,9 +13,10 @@ import kotlinx.coroutines.launch
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : ViewModel() {
     fun getAllCarts() = cartRepository.getUserCartData().asLiveData(Dispatchers.IO)
+
     fun decreaseCart(item: Cart) {
         viewModelScope.launch(Dispatchers.IO) {
             cartRepository.decreaseCart(item).collect()
@@ -36,12 +37,11 @@ class CartViewModel(
 
     fun setCartNotes(item: Cart) {
         viewModelScope.launch(Dispatchers.IO) {
-            cartRepository.setCartNotes(item).collect{
+            cartRepository.setCartNotes(item).collect {
                 Log.d("Set Notes", "setCartNotes: $it")
             }
         }
     }
 
     fun isLoggedIn() = userRepository.isLoggedIn()
-
 }

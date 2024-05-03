@@ -47,15 +47,15 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 object AppModules {
-
     private val networkModule =
         module {
             single<BloomKitchenApiService> { BloomKitchenApiService.invoke() }
         }
 
-    private val firebaseModule = module {
-        single<FirebaseService> { FirebaseServiceImpl() }
-    }
+    private val firebaseModule =
+        module {
+            single<FirebaseService> { FirebaseServiceImpl() }
+        }
 
     val localModule =
         module {

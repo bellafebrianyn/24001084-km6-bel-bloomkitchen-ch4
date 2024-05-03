@@ -14,5 +14,5 @@ data class ListMenuItemResponse(
     @SerializedName("detail")
     val detail: String?,
     @SerializedName("alamat_resto")
-    val resto_address: String?
+    val resto_address: String?,
 )

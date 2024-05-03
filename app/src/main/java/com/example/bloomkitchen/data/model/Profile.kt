@@ -8,5 +8,5 @@ data class Profile(
     @DrawableRes
     var image: Int,
     var username: String,
-    var email: String
+    var email: String,
 )

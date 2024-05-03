@@ -16,11 +16,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class DetailActivity : AppCompatActivity() {
-
     companion object {
         const val EXTRAS_DETAIL_DATA = "EXTRAS_DETAIL_DATA"
 
-        fun startActivity(context: Context, menu: Menu) {
+        fun startActivity(
+            context: Context,
+            menu: Menu,
+        ) {
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra(EXTRAS_DETAIL_DATA, menu)
             context.startActivity(intent)
@@ -47,10 +49,11 @@ class DetailActivity : AppCompatActivity() {
     private fun observeData() {
         detailViewModel.priceLiveData.observe(this) {
             binding.layoutAddToCart.btnTotalPrice.isEnabled = it != 0.0
-            binding.layoutAddToCart.btnTotalPrice.text = getString(
-                R.string.add_to_cart_price,
-                it.toIndonesianFormat()
-            )
+            binding.layoutAddToCart.btnTotalPrice.text =
+                getString(
+                    R.string.add_to_cart_price,
+                    it.toIndonesianFormat(),
+                )
         }
         detailViewModel.menuCountLiveData.observe(this) {
             binding.layoutAddToCart.tvQuantity.text = it.toString()
@@ -84,7 +87,7 @@ class DetailActivity : AppCompatActivity() {
                 },
                 doOnLoading = {
                     Toast.makeText(this, "loading..", Toast.LENGTH_SHORT).show()
-                }
+                },
             )
         }
     }
@@ -101,7 +104,7 @@ class DetailActivity : AppCompatActivity() {
             binding.layoutAddToCart.btnTotalPrice.text =
                 getString(
                     R.string.add_to_cart_price,
-                    menu.price.toIndonesianFormat()
+                    menu.price.toIndonesianFormat(),
                 )
         }
     }
@@ -110,7 +113,6 @@ class DetailActivity : AppCompatActivity() {
         val gmmIntentUri = Uri.parse(location)
         val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
         startActivity(mapIntent)
-
     }
 
     private fun navigateToGoogleMaps(menu: Menu?) {

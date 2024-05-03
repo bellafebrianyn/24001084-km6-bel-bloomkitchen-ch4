@@ -6,5 +6,5 @@ data class CategoryItemResponse(
     @SerializedName("image_url")
     val imageUrl: String?,
     @SerializedName("nama")
-    val name: String?
+    val name: String?,
 )

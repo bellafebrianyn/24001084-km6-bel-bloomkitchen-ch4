@@ -6,8 +6,7 @@ import com.example.bloomkitchen.data.source.network.model.category.CategoryItemR
 fun CategoryItemResponse?.toCategory() =
     Category(
         imageUrl = this?.imageUrl.orEmpty(),
-        name = this?.name.orEmpty()
+        name = this?.name.orEmpty(),
     )
 
-fun Collection<CategoryItemResponse>?.toCategories() =
-    this?.map { it.toCategory() } ?: listOf()
+fun Collection<CategoryItemResponse>?.toCategories() = this?.map { it.toCategory() } ?: listOf()

@@ -12,5 +12,5 @@ data class CategoriesResponse(
     @SerializedName("message")
     val message: String?,
     @SerializedName("data")
-    val data: List<CategoryItemResponse>?
+    val data: List<CategoryItemResponse>?,
 )

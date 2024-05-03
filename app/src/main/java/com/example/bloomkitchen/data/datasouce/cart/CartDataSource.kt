@@ -6,14 +6,18 @@ import kotlinx.coroutines.flow.Flow
 
 interface CartDataSource {
     fun getAllCarts(): Flow<List<CartEntity>>
+
     suspend fun insertCart(cart: CartEntity): Long
+
     suspend fun updateCart(cart: CartEntity): Int
+
     suspend fun deleteCart(cart: CartEntity): Int
+
     suspend fun deleteAll()
 }
 
 class CartDatabaseDataSource(
-    private val dao: CartDao
+    private val dao: CartDao,
 ) : CartDataSource {
     override fun getAllCarts(): Flow<List<CartEntity>> = dao.getAllCarts()
 

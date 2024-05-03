@@ -4,6 +4,7 @@ import com.example.bloomkitchen.data.datasouce.userpreference.UserPreferenceData
 
 interface UserPreferenceRepository {
     fun isUsingGridMode(): Boolean
+
     fun setUsingGridMode(isUsingGridMode: Boolean)
 }
 
@@ -15,5 +16,4 @@ class UserPreferenceRepositoryImpl(private val dataSource: UserPreferenceDataSou
     override fun setUsingGridMode(isUsingGridMode: Boolean) {
         return dataSource.setUsingGridMode(isUsingGridMode)
     }
-
 }

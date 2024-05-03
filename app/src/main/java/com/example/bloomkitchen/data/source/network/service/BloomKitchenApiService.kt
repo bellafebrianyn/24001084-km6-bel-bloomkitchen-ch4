@@ -19,25 +19,30 @@ interface BloomKitchenApiService {
     suspend fun getCategories(): CategoriesResponse
 
     @GET("listmenu")
-    suspend fun getMenu(@Query("c") category: String? = null): ListMenuResponse
+    suspend fun getMenu(
+        @Query("c") category: String? = null,
+    ): ListMenuResponse
 
     @POST("order")
-    suspend fun createOrder(@Body payload: CheckoutRequestPayload): CheckoutResponse
+    suspend fun createOrder(
+        @Body payload: CheckoutRequestPayload,
+    ): CheckoutResponse
 
     companion object {
         @JvmStatic
         operator fun invoke(): BloomKitchenApiService {
-            val okHttpClient = OkHttpClient.Builder()
-                .connectTimeout(120, TimeUnit.SECONDS)
-                .readTimeout(120, TimeUnit.SECONDS)
-                .build()
-            val retrofit = Retrofit.Builder()
-                .baseUrl(BuildConfig.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build()
+            val okHttpClient =
+                OkHttpClient.Builder()
+                    .connectTimeout(120, TimeUnit.SECONDS)
+                    .readTimeout(120, TimeUnit.SECONDS)
+                    .build()
+            val retrofit =
+                Retrofit.Builder()
+                    .baseUrl(BuildConfig.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(okHttpClient)
+                    .build()
             return retrofit.create(BloomKitchenApiService::class.java)
         }
     }
-
 }
