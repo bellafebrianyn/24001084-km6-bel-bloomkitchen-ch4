@@ -6,7 +6,7 @@ import com.example.bloomkitchen.data.source.network.model.menu.ListMenuResponse
 import com.example.bloomkitchen.data.source.network.service.BloomKitchenApiService
 
 class MenuApiDataSource(
-    private val service: BloomKitchenApiService
+    private val service: BloomKitchenApiService,
 ) : MenuDataSource {
     override suspend fun getMenu(categorySlug: String?): ListMenuResponse {
         return service.getMenu(categorySlug)

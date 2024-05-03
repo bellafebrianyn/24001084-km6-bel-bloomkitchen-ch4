@@ -9,7 +9,7 @@ import com.example.myculinaryapp.base.ViewHolderBinder
 
 class MenuGridItemViewHolder(
     private val binding: ItemMenuBinding,
-    private val listener: OnItemClickedListener<Menu>
+    private val listener: OnItemClickedListener<Menu>,
 ) : ViewHolder(binding.root), ViewHolderBinder<Menu> {
     override fun bind(item: Menu) {
         item.let {

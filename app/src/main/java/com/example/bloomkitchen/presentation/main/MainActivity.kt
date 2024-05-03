@@ -11,10 +11,9 @@ import com.example.bloomkitchen.presentation.login.LoginActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(
-            layoutInflater
+            layoutInflater,
         )
     }
 
@@ -32,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         navigationController.addOnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
                 R.id.menu_tab_profile -> {
-                    if(!mainViewModel.isUserLoggedIn()){
+                    if (!mainViewModel.isUserLoggedIn()) {
                         navigateToLogin()
                         controller.popBackStack(R.id.menu_tab_home, false)
                     }
@@ -42,9 +41,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToLogin() {
-        startActivity(Intent(this, LoginActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        })
+        startActivity(
+            Intent(this, LoginActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            },
+        )
     }
-
 }

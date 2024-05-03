@@ -8,5 +8,5 @@ data class CheckoutRequestPayload(
     @SerializedName("total")
     val total: Double,
     @SerializedName("orders")
-    val orders : List<CheckoutItemPayload>
+    val orders: List<CheckoutItemPayload>,
 )

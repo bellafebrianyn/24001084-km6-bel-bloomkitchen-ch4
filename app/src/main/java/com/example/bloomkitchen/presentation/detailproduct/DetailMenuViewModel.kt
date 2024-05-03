@@ -13,18 +13,19 @@ import kotlinx.coroutines.Dispatchers
 
 class DetailMenuViewModel(
     private val extras: Bundle?,
-    private val  cartRepository: CartRepository
-): ViewModel() {
-
+    private val cartRepository: CartRepository,
+) : ViewModel() {
     val menu = extras?.getParcelable<Menu>(DetailActivity.EXTRAS_DETAIL_DATA)
 
-    val menuCountLiveData = MutableLiveData(0).apply {
-        postValue(0)
-    }
+    val menuCountLiveData =
+        MutableLiveData(0).apply {
+            postValue(0)
+        }
 
-    val priceLiveData = MutableLiveData<Double>().apply {
-        postValue(0.0)
-    }
+    val priceLiveData =
+        MutableLiveData<Double>().apply {
+            postValue(0.0)
+        }
 
     fun add() {
         val count = (menuCountLiveData.value ?: 0) + 1
@@ -44,6 +45,6 @@ class DetailMenuViewModel(
         return menu?.let {
             val quantity = menuCountLiveData.value ?: 0
             cartRepository.createCart(it, quantity).asLiveData(Dispatchers.IO)
-        } ?: liveData {emit(ResultWrapper.Error(IllegalStateException("Product not found")))}
+        } ?: liveData { emit(ResultWrapper.Error(IllegalStateException("Product not found"))) }
     }
 }

@@ -11,11 +11,10 @@ class ProfileDataSourceImpl() : ProfileDataSource {
     override fun getProfileData(): List<Profile> {
         return mutableListOf(
             Profile(
-                image = R.drawable.ic_profile ,
+                image = R.drawable.ic_profile,
                 username = "bellafebrianyn",
-                email = "bellafebrianynws@gmail.com"
-            )
+                email = "bellafebrianynws@gmail.com",
+            ),
         )
     }
 }
-

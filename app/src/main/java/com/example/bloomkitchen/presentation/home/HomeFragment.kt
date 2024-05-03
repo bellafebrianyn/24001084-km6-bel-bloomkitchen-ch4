@@ -20,7 +20,6 @@ import com.example.bloomkitchen.utils.proceedWhen
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment() {
-
     private lateinit var binding: FragmentHomeBinding
     private var categories: List<Category>? = null
     private var menuList: List<Menu>? = null
@@ -35,15 +34,19 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         val isUsingGridMode = homeViewModel.isUsingGridMode()
         bindMenuList(isUsingGridMode)
@@ -118,7 +121,7 @@ class HomeFragment : Fragment() {
                     binding.layoutContentStateCategory.tvError.isVisible = false
                     binding.rvCategory.isVisible = false
                     setMenuConstraint(true)
-                }
+                },
             )
         }
     }
@@ -132,15 +135,14 @@ class HomeFragment : Fragment() {
                 R.id.tv_menu,
                 ConstraintSet.TOP,
                 R.id.layout_content_state_category,
-                ConstraintSet.BOTTOM
+                ConstraintSet.BOTTOM,
             )
-
         } else {
             constraintSet.connect(
                 R.id.tv_menu,
                 ConstraintSet.TOP,
                 R.id.rv_category,
-                ConstraintSet.BOTTOM
+                ConstraintSet.BOTTOM,
             )
         }
         constraintSet.applyTo(binding.clHome)
@@ -155,10 +157,11 @@ class HomeFragment : Fragment() {
         var isUsingGrid = usingGrid
         binding.ivChangeListMode.setOnClickListener {
             isUsingGrid = !isUsingGrid
-            if (isUsingGrid)
+            if (isUsingGrid) {
                 binding.ivChangeListMode.setImageResource(R.drawable.ic_list)
-            else
+            } else {
                 binding.ivChangeListMode.setImageResource(R.drawable.ic_grid)
+            }
             bindMenuList(isUsingGrid)
             loadDataMenu()
             homeViewModel.setUsingGridMode(isUsingGrid)
@@ -170,16 +173,17 @@ class HomeFragment : Fragment() {
         menuAdapter =
             MenuAdapter(
                 listMode = listMode,
-                listener = object : OnItemClickedListener<Menu> {
-                    override fun onItemClicked(item: Menu) {
-                        navigateToDetail(item)
-                    }
+                listener =
+                    object : OnItemClickedListener<Menu> {
+                        override fun onItemClicked(item: Menu) {
+                            navigateToDetail(item)
+                        }
 
-                    override fun onItemAddedToCart(item: Menu) {
-                        homeViewModel.addItemToCart(item)
-                    }
-
-                })
+                        override fun onItemAddedToCart(item: Menu) {
+                            homeViewModel.addItemToCart(item)
+                        }
+                    },
+            )
 
         binding.rvMenuList.apply {
             adapter = this@HomeFragment.menuAdapter
@@ -230,7 +234,7 @@ class HomeFragment : Fragment() {
                     binding.layoutContentStateMenu.pbLoading.isVisible = true
                     binding.layoutContentStateMenu.tvError.isVisible = false
                     binding.rvMenuList.isVisible = false
-                }
+                },
             )
         }
     }
@@ -243,5 +247,4 @@ class HomeFragment : Fragment() {
     private fun navigateToDetail(item: Menu) {
         DetailActivity.startActivity(requireContext(), item)
     }
-
 }

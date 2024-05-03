@@ -8,8 +8,8 @@ import com.example.bloomkitchen.utils.toIndonesianFormat
 import com.example.myculinaryapp.base.ViewHolderBinder
 
 class MenuListItemViewHolder(
-    private val binding:ItemMenuListBinding,
-    private val listener: OnItemClickedListener<Menu>
+    private val binding: ItemMenuListBinding,
+    private val listener: OnItemClickedListener<Menu>,
 ) : ViewHolder(binding.root), ViewHolderBinder<Menu> {
     override fun bind(item: Menu) {
         item.let {

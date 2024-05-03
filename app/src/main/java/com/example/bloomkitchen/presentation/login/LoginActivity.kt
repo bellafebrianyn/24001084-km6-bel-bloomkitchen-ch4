@@ -20,7 +20,6 @@ import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
-
     private val binding: ActivityLoginBinding by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
     }
@@ -83,32 +82,34 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(
                         this,
                         "Error :  ${it.exception?.message}",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
                     Log.d(
                         "reqChangePasswordByEmail",
-                        "createEmailInputDialog: ${it.exception?.message}"
+                        "createEmailInputDialog: ${it.exception?.message}",
                     )
-                }
+                },
             )
         }
     }
 
     private fun resetPasswordSuccessDialog() {
-        val dialog = AlertDialog.Builder(this)
-            .setMessage(getString(R.string.dialog_dialog_req_update_password))
-            .setPositiveButton(
-                getString(R.string.oke)
-            ) { dialog, id ->
-
-            }.create()
+        val dialog =
+            AlertDialog.Builder(this)
+                .setMessage(getString(R.string.dialog_dialog_req_update_password))
+                .setPositiveButton(
+                    getString(R.string.oke),
+                ) { dialog, id ->
+                }.create()
         dialog.show()
     }
 
     private fun navigateToRegister() {
-        startActivity(Intent(this, RegisterActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        })
+        startActivity(
+            Intent(this, RegisterActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            },
+        )
     }
 
     private fun doLogin() {
@@ -121,12 +122,17 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun navigateToMain() {
-        startActivity(Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-        })
+        startActivity(
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            },
+        )
     }
 
-    private fun proceedLogin(email: String, password: String) {
+    private fun proceedLogin(
+        email: String,
+        password: String,
+    ) {
         loginViewModel.doLogin(email, password).observe(this) { result ->
             result.proceedWhen(
                 doOnSuccess = {
@@ -141,13 +147,13 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(
                         this,
                         getString(R.string.login_failed, it.exception?.message.orEmpty()),
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
                 },
                 doOnLoading = {
                     binding.layoutFormLogin.pbLoading.isVisible = true
                     binding.layoutFormLogin.btnLogin.isVisible = false
-                }
+                },
             )
         }
     }
@@ -157,13 +163,12 @@ class LoginActivity : AppCompatActivity() {
         val password = binding.layoutFormLogin.etPassword.text.toString().trim()
 
         return checkEmailValidation(email) &&
-                checkPasswordValidation(password, binding.layoutFormLogin.tilPassword)
-
+            checkPasswordValidation(password, binding.layoutFormLogin.tilPassword)
     }
 
     private fun checkPasswordValidation(
         confirmPassword: String,
-        textInputLayout: TextInputLayout
+        textInputLayout: TextInputLayout,
     ): Boolean {
         return if (confirmPassword.isEmpty()) {
             textInputLayout.isErrorEnabled = true

@@ -11,9 +11,10 @@ fun ListMenuItemResponse?.toMenu() =
         price = this?.price ?: 0.0,
         detail = this?.detail.orEmpty(),
         restoAddress = this?.resto_address.orEmpty(),
-        locationUrl = "https://maps.app.goo.gl/h4wQKqaBuXzftGK77"
+        locationUrl = "https://maps.app.goo.gl/h4wQKqaBuXzftGK77",
     )
 
-fun Collection<ListMenuItemResponse>?.toMenu() = this?.map {
-    it.toMenu()
-} ?: listOf()
+fun Collection<ListMenuItemResponse>?.toMenu() =
+    this?.map {
+        it.toMenu()
+    } ?: listOf()

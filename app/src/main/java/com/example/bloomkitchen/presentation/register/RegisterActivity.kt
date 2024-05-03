@@ -16,7 +16,6 @@ import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterActivity : AppCompatActivity() {
-
     private val binding: ActivityRegisterBinding by lazy {
         ActivityRegisterBinding.inflate(layoutInflater)
     }
@@ -40,11 +39,12 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun navigateToLogin() {
-          startActivity(Intent(this, LoginActivity::class.java).apply {
-              flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-          })
+        startActivity(
+            Intent(this, LoginActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            },
+        )
     }
-
 
     private fun doRegister() {
         if (isFormValid()) {
@@ -58,7 +58,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun proceedRegister(
         fullName: String,
         email: String,
-        password: String
+        password: String,
     ) {
         registerViewModel.doRegister(fullName, email, password).observe(this) {
             it.proceedWhen(
@@ -73,21 +73,23 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.makeText(
                         this,
                         "Login Failed : ${it.exception?.message.orEmpty()}",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
                 },
                 doOnLoading = {
                     binding.layoutFormRegister.pbLoading.isVisible = true
                     binding.layoutFormRegister.btnRegister.isVisible = false
-                }
+                },
             )
         }
     }
 
     private fun navigateToMain() {
-        startActivity(Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-        })
+        startActivity(
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            },
+        )
     }
 
     private fun isFormValid(): Boolean {
@@ -96,19 +98,23 @@ class RegisterActivity : AppCompatActivity() {
         val password = binding.layoutFormRegister.etPassword.text.toString().trim()
         val confirmPassword = binding.layoutFormRegister.etConfirmPassword.text.toString().trim()
 
-        return checkNameValidation(fullName) && checkPasswordValidation(
-            password,
-            binding.layoutFormRegister.tilPassword
-        ) &&
-                checkEmailValidation(email) && checkPasswordValidation(
-            confirmPassword,
-            binding.layoutFormRegister.tilConfirmPassword
-        ) &&
-                checkPwdAndConfirmPwd(password, confirmPassword)
+        return checkNameValidation(fullName) &&
+            checkPasswordValidation(
+                password,
+                binding.layoutFormRegister.tilPassword,
+            ) &&
+            checkEmailValidation(email) &&
+            checkPasswordValidation(
+                confirmPassword,
+                binding.layoutFormRegister.tilConfirmPassword,
+            ) &&
+            checkPwdAndConfirmPwd(password, confirmPassword)
     }
 
-
-    private fun checkPwdAndConfirmPwd(password: String, confirmPassword: String): Boolean {
+    private fun checkPwdAndConfirmPwd(
+        password: String,
+        confirmPassword: String,
+    ): Boolean {
         return if (password != confirmPassword) {
             binding.layoutFormRegister.tilPassword.isErrorEnabled = true
             binding.layoutFormRegister.tilPassword.error =
@@ -141,7 +147,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun checkPasswordValidation(
         confirmPassword: String,
-        textInputLayout: TextInputLayout
+        textInputLayout: TextInputLayout,
     ): Boolean {
         return if (confirmPassword.isEmpty()) {
             textInputLayout.isErrorEnabled = true
