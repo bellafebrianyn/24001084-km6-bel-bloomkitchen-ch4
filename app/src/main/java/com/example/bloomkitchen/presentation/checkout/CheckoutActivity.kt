@@ -13,7 +13,7 @@ import com.example.bloomkitchen.presentation.common.adapter.CartListAdapter
 import com.example.bloomkitchen.utils.proceedWhen
 import com.example.bloomkitchen.utils.toIndonesianFormat
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
+import java.text.DateFormat
 import java.util.Date
 
 class CheckoutActivity : AppCompatActivity() {
@@ -57,7 +57,8 @@ class CheckoutActivity : AppCompatActivity() {
         val binding: LayoutDialogOrderBinding = LayoutDialogOrderBinding.inflate(layoutInflater)
         val dialog = AlertDialog.Builder(this).create()
 
-        val dateAndTime = SimpleDateFormat("dd MMMM yyyy HH:mm:ss").format(Date())
+        val dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
+        val dateAndTime = dateFormat.format(Date())
         binding.tvTransactionDate.text = dateAndTime
 
         val generatedNumber = NumberGenerator.generateNextNumber()
