@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/ic_profile"
+        android:src="@drawable/ic_tab_profile"
         app:tint="@color/md_theme_light_outline" />
 
     <TextView

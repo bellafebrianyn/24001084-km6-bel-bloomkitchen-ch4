@@ -60,7 +60,7 @@
             android:id="@+id/iv_app_profile"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@drawable/ic_profile"
+            android:src="@drawable/ic_tab_profile"
             app:layout_constraintBottom_toBottomOf="@+id/tv_header_desc"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_greetings"

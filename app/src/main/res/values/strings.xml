@@ -83,4 +83,6 @@
     <string name="enter_email">Masukkan Email Anda</string>
     <string name="send">Kirim</string>
     <string name="cancel">Batal</string>
+    <string name="title_list_menu">List Menu Makanan</string>
+    <string name="profile">Profile</string>
 </resources>
