@@ -1,30 +1,15 @@
 package com.example.bloomkitchen.presentation.profile
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.example.bloomkitchen.data.datasource.ProfileDataSource
-import com.example.bloomkitchen.data.model.Profile
 import com.example.bloomkitchen.data.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 
 class ProfileViewModel(
     private val userRepository: UserRepository,
-    private val profileDataSource: ProfileDataSource,
 ) : ViewModel() {
-    private val _profileData = MutableLiveData<Profile>()
-    val profileData: LiveData<Profile>
-        get() = _profileData
-
     val editProfile = MutableLiveData(false)
-
-    fun getProfileData() {
-        val profiles = profileDataSource.getProfileData()
-        if (profiles.isNotEmpty()) {
-            _profileData.value = profiles[0]
-        }
-    }
 
     fun changeEditMode() {
         val currentProfileData = editProfile.value ?: false
