@@ -1,16 +1,20 @@
 package com.example.bloomkitchen.presentation.home
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.bloomkitchen.data.model.Menu
 import com.example.bloomkitchen.data.repository.CartRepository
 import com.example.bloomkitchen.data.repository.CategoryRepository
 import com.example.bloomkitchen.data.repository.MenuRepository
 import com.example.bloomkitchen.data.repository.UserPreferenceRepository
 import com.example.bloomkitchen.data.repository.UserRepository
-import com.example.bloomkitchen.utils.ResultWrapper
+import com.example.bloomkitchen.utils.proceedWhen
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val categoryRepository: CategoryRepository,
@@ -34,27 +38,21 @@ class HomeViewModel(
 
     fun addItemToCart(menu: Menu) {
         menuCountLiveData.value = 1
-
-        cartRepository.createCart(menu, 1)
-            .asLiveData(Dispatchers.IO)
-            .observeForever { result ->
-                when (result) {
-                    is ResultWrapper.Success -> {
-                        println("Add to Cart Success")
-                    }
-
-                    is ResultWrapper.Error -> {
-                        println("Add to Cart Failed")
-                    }
-
-                    is ResultWrapper.Loading -> {
-                        println("Loading..")
-                    }
-
-                    else -> {
-                    }
-                }
+        viewModelScope.launch {
+            cartRepository.createCart(menu, 1).collect {
+                it.proceedWhen(
+                    doOnSuccess = {
+                        Log.d(TAG, "addItemToCart: Success")
+                    },
+                    doOnError = {
+                        Log.d(TAG, "addItemToCart: Error")
+                    },
+                    doOnEmpty = {
+                        Log.d(TAG, "addItemToCart: Empty")
+                    },
+                )
             }
+        }
     }
 
     fun isUsingGridMode() = userPreferenceRepository.isUsingGridMode()

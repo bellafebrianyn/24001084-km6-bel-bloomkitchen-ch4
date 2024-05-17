@@ -11,8 +11,6 @@ import com.example.bloomkitchen.data.datasouce.menu.MenuApiDataSource
 import com.example.bloomkitchen.data.datasouce.menu.MenuDataSource
 import com.example.bloomkitchen.data.datasouce.userpreference.UserPreferenceDataSource
 import com.example.bloomkitchen.data.datasouce.userpreference.UserPreferenceDataSourceImpl
-import com.example.bloomkitchen.data.datasource.ProfileDataSource
-import com.example.bloomkitchen.data.datasource.ProfileDataSourceImpl
 import com.example.bloomkitchen.data.repository.CartRepository
 import com.example.bloomkitchen.data.repository.CartRepositoryImpl
 import com.example.bloomkitchen.data.repository.CategoryRepository
@@ -76,7 +74,6 @@ object AppModules {
             single<CartDataSource> { CartDatabaseDataSource(get()) }
             single<CategoryDataSource> { CategoryApiDataSource(get()) }
             single<MenuDataSource> { MenuApiDataSource(get()) }
-            single<ProfileDataSource> { ProfileDataSourceImpl() }
             single<UserPreferenceDataSource> { UserPreferenceDataSourceImpl(get()) }
         }
 
@@ -103,8 +100,8 @@ object AppModules {
             viewModelOf(::MainViewModel)
             viewModelOf(::RegisterViewModel)
             viewModelOf(::LoginViewModel)
-            viewModelOf(::ProfileViewModel)
             viewModelOf(::SplashViewModel)
+            viewModelOf(::ProfileViewModel)
         }
 
     val modules = listOf<Module>(networkModule, firebaseModule, localModule, dataSource, repository, viewModelModule)

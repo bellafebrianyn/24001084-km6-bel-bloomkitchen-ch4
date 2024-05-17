@@ -10,7 +10,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Observer
 import coil.load
 import com.example.bloomkitchen.R
 import com.example.bloomkitchen.databinding.FragmentProfileBinding
@@ -37,23 +36,17 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        profileViewModel.getProfileData()
         setClickListener()
         editProfileData()
         doLogout()
 
-        profileViewModel.profileData.observe(
-            viewLifecycleOwner,
-            Observer { profile ->
-                binding.profileData.ivProfilePhoto.load(profile.image) {
-                    crossfade(true)
-                    error(R.mipmap.ic_launcher)
-                }
-                val currentUser = profileViewModel.getCurrentUser()
-                binding.profileData.etUsername.setText("${currentUser?.fullName}")
-                binding.profileData.etEmail.setText("${currentUser?.email}")
-            },
-        )
+        val currentUser = profileViewModel.getCurrentUser()
+        binding.profileData.ivProfilePhoto.load(R.drawable.ic_tab_profile) {
+            crossfade(true)
+            error(R.mipmap.ic_launcher)
+        }
+        binding.profileData.etUsername.setText(currentUser?.fullName)
+        binding.profileData.etEmail.setText(currentUser?.email)
     }
 
     private fun setClickListener() {
@@ -126,7 +119,11 @@ class ProfileFragment : Fragment() {
             result.proceedWhen(
                 doOnSuccess = {
                     binding.btnSave.isVisible = false
-                    Toast.makeText(requireContext(), getString(R.string.accept_update), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.accept_update),
+                        Toast.LENGTH_SHORT,
+                    ).show()
                     profileViewModel.changeEditMode()
                 },
                 doOnError = {
